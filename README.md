@@ -5,9 +5,6 @@ Dumps a nested sitemap to csv.
 Update the url for the initial sitemap,
 
 ```js
-```
-
-```js
 let SitemapRepository = require('./Repository/SitemapRepository');
 let sitemapRepository = new SitemapRepository('https://www.sitename.com/sitemap.xml');
 ```
