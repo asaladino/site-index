@@ -1,8 +1,8 @@
 let SitemapRepository = require('./Repository/SitemapRepository');
-let UrlsRepository = require('./Repository/UrlsRepository');
+let JsonUrlsRepository = require('./Repository/JsonUrlsRepository');
 
-let sitemapRepository = new SitemapRepository('https://www.sitename.com/sitemap.xml');
-let urlsRepository = new UrlsRepository('urls.csv');
+let sitemapRepository = new SitemapRepository('https://www.sfccmo.edu/sitemap.xml');
+let urlsRepository = new JsonUrlsRepository('output/urls.json');
 
 sitemapRepository.findAllPages((progress) => {
     console.log('Retrieving: ' + progress.url);

@@ -1,10 +1,22 @@
 let request = require('then-request');
 let parseString = require('xml2js').parseString;
 let Progress = require('../Model/Progress');
+let Url = require('../Model/Url');
 
+/**
+ * Get all the urls from the sitemaps.
+ */
 class SitemapRepository {
 
+    /**
+     * Build a sitemap repository
+     * @param initialSitemap {string}
+     */
     constructor(initialSitemap) {
+        /**
+         * The initial sitemap url.
+         * @type {string}
+         */
         this.initialSitemap = initialSitemap;
 
         /**
@@ -14,14 +26,14 @@ class SitemapRepository {
         this.sitemaps = [];
 
         /**
-         * Array of all the pages found.
-         * @type {[string]}
+         * Array of all the urls found.
+         * @type {[Url]}
          */
-        this.pages = [];
+        this.urls = [];
     }
 
     /**
-     * Find all the pages on a sitemap.
+     * Find all the urls on a sitemap.
      * @returns {Promise}
      */
     findAllPages(progress) {
@@ -36,18 +48,23 @@ class SitemapRepository {
         });
     }
 
+    /**
+     * Gets the sitemap, if there are more sitemaps it will add them to the list
+     * else, just adds the urls to the urls array.
+     */
     parseSiteMap() {
         let url = this.sitemaps.pop();
-        this.progress(new Progress(url, this.sitemaps.length, this.pages.length));
+        this.progress(new Progress(url, this.sitemaps.length, this.urls.length));
         request('GET', url).done((res) => {
             let xml = res.getBody('utf8');
             parseString(xml, (err, result) => {
                 if (result['urlset']) {
                     result['urlset']['url'].forEach(entry => {
-                        this.pages.push(entry['loc'][0]);
+                        let url = new Url(entry['loc'][0]);
+                        this.urls.push(url);
                     });
                     if (this.sitemaps.length === 0) {
-                        this.resolve(this.pages);
+                        this.resolve(this.urls);
                     } else {
                         this.parseSiteMap();
                     }
@@ -62,6 +79,5 @@ class SitemapRepository {
         });
     }
 }
-
 
 module.exports = SitemapRepository;
