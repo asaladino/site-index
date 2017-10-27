@@ -1,0 +1,17 @@
+{
+  "name": "sitemaps-dump",
+  "version": "1.0.0",
+  "description": "Dumps a nested sitemap to csv ",
+  "main": "index.js",
+  "repository": "https://github.com/asaladino/sitemap-dump",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Saladino<adam@codingsimply.com>",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "then-request": "^4.1.0",
+    "xml2js": "^0.4.19"
+  }
+}
