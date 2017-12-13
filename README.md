@@ -1,25 +1,29 @@
-# Sitemap Dump
+# Site Index
 
-Dumps a nested sitemap to csv.
+Site Index crawl a site and index any reachable urls and output to a urls.json file.
 
-Update the url for the initial sitemap,
-
-```js
-let SitemapRepository = require('./Repository/SitemapRepository');
-let sitemapRepository = new SitemapRepository('https://www.sitename.com/sitemap.xml');
-```
-
-select the output repo,
-```js
-let JsonUrlsRepository = require('./Repository/JsonUrlsRepository');
-urlsRepository = new JsonUrlsRepository('output/urls.json');
-
-let CsvUrlsRepository = require('./Repository/CsvUrlsRepository');
-urlsRepository = new CsvUrlsRepository('output/urls.csv');
-```
-
-then run the `index.js` file
+To start a crawl, run the `index.js` file
 
 ```
-node index.js
+node index.js --domain "codingsimply.com" --type crawl --output "/some/reports"
+```
+
+Domain and output folder are required parameters. To see a list of parameters, run
+
+```
+node index.js --help
+
+Sitemap Dump
+
+  Converts a sitemap to a json format for report generation. Will also crawl a  
+  site to generate the json file.                                               
+
+Options
+
+  --domain www.domain.com   (Required) Domain to crawl.                     
+  --output file             (Required) Folder to output the information to. 
+  --type sitemap|crawl      Use the sitemap or crawl the site for links.    
+  --verbose                 Output information on the crawl.                
+  --help                    Print this usage guide.    
+
 ```
