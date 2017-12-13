@@ -10,7 +10,11 @@
   "author": "Adam Saladino<adam@codingsimply.com>",
   "license": "MIT",
   "dependencies": {
+    "command-line-args": "^4.0.7",
+    "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
+    "jsdom": "^11.5.1",
+    "sitemap-generator": "^7.5.1",
     "then-request": "^4.1.0",
     "xml2js": "^0.4.19"
   }

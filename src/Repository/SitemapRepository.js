@@ -17,7 +17,7 @@ class SitemapRepository {
          * The initial sitemap url.
          * @type {string}
          */
-        this.initialSitemap = initialSitemap;
+        this.initialUrl = initialSitemap;
 
         /**
          * Array of the site maps to search. This list gets popped and will be empty.
@@ -39,12 +39,12 @@ class SitemapRepository {
     findAllPages(progress) {
         this.progress = progress;
         if (this.sitemaps.length === 0) {
-            this.sitemaps.push(this.initialSitemap);
+            this.sitemaps.push(this.initialUrl);
         }
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
-            this.parseSiteMap(resolve, reject);
+            this.parseSiteMap();
         });
     }
 

@@ -26,7 +26,6 @@ class JsonUrlsRepository {
             resolve();
         });
     }
-
 }
 
 module.exports = JsonUrlsRepository;

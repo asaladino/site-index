@@ -1,13 +1,22 @@
-let SitemapRepository = require('./Repository/SitemapRepository');
-let JsonUrlsRepository = require('./Repository/JsonUrlsRepository');
+const commandLineArgs = require('command-line-args');
+const getUsage = require('command-line-usage');
 
-let sitemapRepository = new SitemapRepository('https://www.somesite.com/sitemap.xml');
-let urlsRepository = new JsonUrlsRepository('output/urls.json');
+const menu = require('./src/Model/Menu');
+const Args = require('./src/Model/Args');
+const CrawlService = require('./src/Service/CrawlService');
+const SitemapService = require('./src/Service/SitemapService');
 
-sitemapRepository.findAllPages((progress) => {
-    console.log('Retrieving: ' + progress.url);
-}).then((urls) => {
-    urlsRepository.save(urls).then(() => {
-        console.log('Done. Saved: ' + urls.length);
-    });
-});
+let args = new Args(commandLineArgs(menu[1]['optionList']));
+
+if (args.shouldShowHelp()) {
+    console.log(getUsage(menu));
+} else {
+    args.output.doesFolderExist();
+    if (args.isCrawl()) {
+        let crawlService = new CrawlService(args);
+        crawlService.start();
+    } else {
+        let sitemapService = new SitemapService(args);
+        sitemapService.start();
+    }
+}
