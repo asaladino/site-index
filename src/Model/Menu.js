@@ -2,7 +2,7 @@ const FileDetails = require('./FileDetails');
 
 module.exports = [
     {
-        header: 'Sitemap Dump',
+        header: 'Site Index',
         content: 'Converts a sitemap to a json format for report generation. Will also crawl a site to generate the json file.'
     },
     {
