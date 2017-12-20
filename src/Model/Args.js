@@ -7,6 +7,11 @@ class Args {
          */
         this.output = null;
         this.type = 'crawl';
+        /**
+         * Should the html be saved?
+         * @type {boolean}
+         */
+        this.html = false;
         Object.assign(this, params);
     }
 

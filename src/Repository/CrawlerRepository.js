@@ -46,7 +46,7 @@ class CrawlerRepository {
         if (this.urlsPool.length === 0) {
             this.urlsPool.push(this.initialUrl);
         }
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             this.resolve = resolve;
             this.crawlNextUrl();
         });
@@ -61,8 +61,8 @@ class CrawlerRepository {
             return this.resolve(this.urls);
         }
         let url = CrawlerRepository.cleanUrl(this.urlsPool.pop());
-        this.progress(new Progress(url, this.urlsPool.length, this.urls.length));
         JSDOM.fromURL(url).then(dom => {
+            this.progress(new Progress(url, dom.window.document.documentElement.innerHTML, this.urlsPool.length, this.urls.length));
             this.urls.push(new Url(url));
             const links = dom.window.document.querySelectorAll("a");
             for (let link of links) {

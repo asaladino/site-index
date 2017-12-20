@@ -6,11 +6,13 @@ class Progress {
     /**
      * Build a progress object.
      * @param url {string} current url
+     * @param html {string} for the current url.
      * @param sitemaps {Number} left to progress through.
      * @param urls {Number} found.
      */
-    constructor(url, sitemaps, urls) {
+    constructor(url, html, sitemaps, urls) {
         this.url = url;
+        this.html = html;
         this.sitemaps = sitemaps;
         this.urls = urls;
     }

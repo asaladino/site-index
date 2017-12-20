@@ -3,7 +3,13 @@ const path = require("path");
 
 class Service {
 
+    /**
+     * @param args {Args}
+     */
     constructor(args) {
+        /**
+         * @type {Args}
+         */
         this.args = args;
     }
 

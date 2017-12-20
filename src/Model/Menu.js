@@ -21,6 +21,12 @@ module.exports = [
                 description: '(Required) Folder to output the information to.'
             },
             {
+                name: 'html',
+                defaultValue: true,
+                type: Boolean,
+                description: 'Save the raw html to file.'
+            },
+            {
                 name: 'type',
                 defaultValue: 'crawl',
                 type: String,
