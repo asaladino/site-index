@@ -62,8 +62,9 @@ class CrawlerRepository {
         }
         let url = CrawlerRepository.cleanUrl(this.urlsPool.pop());
         JSDOM.fromURL(url).then(dom => {
-            this.progress(new Progress(url, dom.window.document.documentElement.innerHTML, this.urlsPool.length, this.urls.length));
-            this.urls.push(new Url(url));
+            const newUrl = new Url(url);
+            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.urlsPool.length, this.urls.length));
+            this.urls.push(newUrl);
             const links = dom.window.document.querySelectorAll("a");
             for (let link of links) {
                 let foundUrl = CrawlerRepository.cleanUrl(link.href);

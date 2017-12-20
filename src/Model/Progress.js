@@ -1,3 +1,5 @@
+const Url = require('./Url');
+
 /**
  * Class for reporting the progress.
  */
@@ -5,7 +7,7 @@ class Progress {
 
     /**
      * Build a progress object.
-     * @param url {string} current url
+     * @param url {Url} current url
      * @param html {string} for the current url.
      * @param sitemaps {Number} left to progress through.
      * @param urls {Number} found.
