@@ -11,7 +11,7 @@ class CrawlService extends Service {
         let htmlRepository = new HtmlRepository(this.getProjectPath());
         let crawlerRepository = new CrawlerRepository(this.args.domain);
         crawlerRepository.findAllUrls(/** @type {Progress} */progress => {
-            console.log(progress.sitemaps + ' | ' + progress.urls + ' :: retrieving: ' + progress.url);
+            console.log(progress.sitemaps + ' | ' + progress.urls + ' :: retrieving: ' + progress.url.url);
             if(this.args.html) {
                 htmlRepository.save(progress.url, progress.html)
                     .then(() => {
