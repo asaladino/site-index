@@ -1,8 +1,8 @@
 # Site Index
 
-Site Index crawl a site and index any reachable urls and output to a urls.json file.
+Site Index will crawl a domain and index any reachable html urls then output to a urls.json file.
 
-To start a crawl, run the `index.js` file
+To start an index, run the `site-index` file
 
 ```
 ./site-index --domain "codingsimply.com" --verbose --html --type crawl --output "/some/reports"
@@ -11,19 +11,20 @@ To start a crawl, run the `index.js` file
 Domain and output folder are required parameters. To see a list of parameters, run
 
 ```
-node index.js --help
+./site-index --help
 
-Sitemap Dump
+Site Index
 
-  Converts a sitemap to a json format for report generation. Will also crawl a  
-  site to generate the json file.                                               
+  Will crawl a site and generate the json file for all the urls found. Also     
+  converts a sitemap to a json file.                                            
 
 Options
 
   --domain www.domain.com   (Required) Domain to crawl.                     
   --output file             (Required) Folder to output the information to. 
+  --html                    Save the raw html to file.                      
   --type sitemap|crawl      Use the sitemap or crawl the site for links.    
-  --verbose                 Output information on the crawl.                
-  --help                    Print this usage guide.    
+  --verbose                 Output progress information on the index.       
+  --help                    Print this usage guide.  
 
 ```
