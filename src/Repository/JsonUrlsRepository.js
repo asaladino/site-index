@@ -19,10 +19,8 @@ class JsonUrlsRepository {
      * @returns {Promise}
      */
     save(urls) {
-        return new Promise((resolve, reject) => {
-            fs.writeFileSync(this.file, JSON.stringify(urls), function (error) {
-                reject(error);
-            });
+        return new Promise(resolve => {
+            fs.writeFileSync(this.file, JSON.stringify(urls));
             resolve();
         });
     }

@@ -4,7 +4,11 @@ let Url = require('../Model/Url');
 const jsdom = require("jsdom");
 const {JSDOM} = jsdom;
 
+/**
+ * This crawler repository will use a domain name as a datasource and extract urls from it.
+ */
 class CrawlerRepository {
+
     /**
      * Build a sitemap repository
      * @param domain {string}
@@ -26,10 +30,10 @@ class CrawlerRepository {
          */
         this.urlsPool = [];
         /**
-         * List of pages that have been attempted, so we don't get unending crawls.
+         * List of urls that have been attempted, so we don't get unending crawls.
          * @type {[string]}
          */
-        this.pagesAttempted = [this.initialUrl];
+        this.urlsAttempted = [this.initialUrl];
         /**
          * Array of all the urls found.
          * @type {[Url]}
@@ -78,18 +82,35 @@ class CrawlerRepository {
         });
     }
 
+    /**
+     * Add a url that has not been checked.
+     * @param url {string} to check later.
+     */
     addFreshUrl(url) {
         this.urlsPool.push(url);
-        this.pagesAttempted.push(url);
+        this.urlsAttempted.push(url);
     }
 
+    /**
+     * Has the url been crawled before?
+     * @param url {string} to check.
+     * @returns {boolean} true if the url has not been attempted.
+     */
     isFreshUrl(url) {
-        return this.pagesAttempted.filter(p => p === url).length === 0
+        return this.urlsAttempted.filter(p => p === url).length === 0
             && this.isInDomain(url)
             && CrawlerRepository.isNotRecursive(url)
             && CrawlerRepository.isNotDocument(url)
     }
 
+    /**
+     * This crawler only crawls html pages so make sure it is not something else.
+     *
+     * The next version will handle every document type.
+     *
+     * @param url {string} to check.
+     * @returns {boolean} true if the url is not a document.
+     */
     static isNotDocument(url) {
         return !url.endsWith('.pdf')
             && !url.endsWith('.jpg')
@@ -98,6 +119,12 @@ class CrawlerRepository {
             && !url.endsWith('.doc');
     }
 
+    /**
+     * Some sites I have crawled urls that are recursive and grow without a 404 being thrown. This
+     * method attempts to avoid those pages.
+     * @param url {string} to check.
+     * @returns {boolean} true if the url is not recursive.
+     */
     static isNotRecursive(url) {
         let uri = url.replace(/(https|http):/i, '').split('/');
         const entries = uri.splice(3, uri.length);
@@ -110,10 +137,20 @@ class CrawlerRepository {
         return true;
     }
 
+    /**
+     * The index will only crawl urls on the given domain.
+     * @param url {string} to check.
+     * @returns {boolean} true if it is on the domain.
+     */
     isInDomain(url) {
         return url.replace(/(https|http):/i, '').startsWith('//' + this.domain);
     }
 
+    /**
+     * Remove url params and hashes. They can lead to recursion.
+     * @param url {string} to clean.
+     * @returns {string} a url without params and hashes.
+     */
     static cleanUrl(url) {
         return url.split('?')[0].split('#')[0];
     }

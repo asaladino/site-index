@@ -1,9 +1,14 @@
 const FileDetails = require('./FileDetails');
 
+/**
+ * Available options for the site index.
+ * @type {*[]}
+ */
 module.exports = [
     {
         header: 'Site Index',
-        content: 'Converts a sitemap to a json format for report generation. Will also crawl a site to generate the json file.'
+        content: 'Will crawl a site and generate the json file for all the urls found.' +
+        ' Also converts a sitemap to a json file.'
     },
     {
         header: 'Options',
@@ -22,7 +27,7 @@ module.exports = [
             },
             {
                 name: 'html',
-                defaultValue: true,
+                defaultValue: false,
                 type: Boolean,
                 description: 'Save the raw html to file.'
             },
@@ -37,7 +42,7 @@ module.exports = [
                 name: 'verbose',
                 defaultValue: false,
                 type: Boolean,
-                description: 'Output information on the crawl.'
+                description: 'Output progress information on the index.'
             },
             {
                 name: 'help',

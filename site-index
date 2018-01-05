@@ -13,11 +13,26 @@ if (args.shouldShowHelp()) {
     console.log(getUsage(menu));
 } else {
     args.output.doesFolderExist();
+    console.log('\nStarting Site Index');
     if (args.isCrawl()) {
         let crawlService = new CrawlService(args);
+        crawlService
+            .on('progress', progress => {
+                if (args.verbose) {
+                    console.log(progress.toString());
+                }
+            })
+            .on('complete', () => console.log('Done'));
         crawlService.start();
     } else {
         let sitemapService = new SitemapService(args);
+        sitemapService
+            .on('progress', progress => {
+                if (args.verbose) {
+                    console.log(progress.toString());
+                }
+            })
+            .on('complete', () => console.log('Done'));
         sitemapService.start();
     }
 }
