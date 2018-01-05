@@ -5,7 +5,7 @@ Site Index crawl a site and index any reachable urls and output to a urls.json f
 To start a crawl, run the `index.js` file
 
 ```
-node index.js --domain "codingsimply.com" --type crawl --output "/some/reports"
+./site-index --domain "codingsimply.com" --verbose --html --type crawl --output "/some/reports"
 ```
 
 Domain and output folder are required parameters. To see a list of parameters, run

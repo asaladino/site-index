@@ -6,7 +6,8 @@ const FileDetails = require('./FileDetails');
 class Args {
     constructor(params) {
         /**
-         * @type FileDetails
+         * Project directory to output the index results.
+         * @type {FileDetails|null}
          */
         this.output = null;
         /**
@@ -21,8 +22,9 @@ class Args {
         this.html = false;
         /**
          * Domain being indexed.
+         * @type {string|*}
          */
-        this.domain = '';
+        this.domain = null;
         /**
          * Should progress information be output to the console?
          * @type {boolean}
@@ -36,7 +38,7 @@ class Args {
      * @returns {boolean} true if the mandatory options are not passed.
      */
     shouldShowHelp() {
-        return this.hasOwnProperty('help') || !this.hasOwnProperty('domain') || !this.hasOwnProperty('output');
+        return this.hasOwnProperty('help') || (this.domain === null || this.output === null);
     }
 
     /**
