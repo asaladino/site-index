@@ -1,8 +1,7 @@
 /**
- * Url found on the site. Works with the site-a11y app.
+ * Url found on the site.
  */
 class Url {
-
     /**
      * Build a url.
      * @param url {string} found in the sitemap.
