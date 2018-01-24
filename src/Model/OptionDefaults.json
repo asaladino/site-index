@@ -1,0 +1,29 @@
+{
+  "index": {
+    "exclusions": []
+  },
+  "a11y": {
+    "standard": "WCAG2AA",
+    "includeNotices": true,
+    "includeWarnings": true,
+    "actions": [
+    ],
+    "pa11yLogin": {
+      "concurrency": 1,
+      "startUrl": 0,
+      "endUrl": -1
+    }
+  },
+  "stats": {
+    "reports": [
+      {
+        "name": "overview",
+        "type": "twig"
+      },
+      {
+        "name": "overview",
+        "type": "docx"
+      }
+    ]
+  }
+}

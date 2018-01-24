@@ -48,6 +48,14 @@ class Args {
     isCrawl() {
         return this.type === 'crawl';
     }
+
+    /**
+     * Name of the site that is being crawled.
+     * @returns {string}
+     */
+    getSiteName() {
+        return this.domain.replace(/[.]/g, '_');
+    }
 }
 
 module.exports = Args;

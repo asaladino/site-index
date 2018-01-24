@@ -1,8 +1,11 @@
 let Progress = require('../Model/Progress');
 let Url = require('../Model/Url');
+let Args = require('../Model/Args');
+let Option = require('../Model/Option');
 
 const jsdom = require("jsdom");
 const {JSDOM} = jsdom;
+const UrlParser = require('url');
 
 /**
  * This crawler repository will use a domain name as a datasource and extract urls from it.
@@ -11,19 +14,25 @@ class CrawlerRepository {
 
     /**
      * Build a sitemap repository
-     * @param domain {string}
+     * @param args {Args}
+     * @param option {Option}
      */
-    constructor(domain) {
+    constructor(args, option) {
         /**
          * The initial sitemap url.
          * @type {string}
          */
-        this.initialUrl = 'http://' + domain;
+        this.initialUrl = 'http://' + args.domain;
         /**
-         * Keeps the crawl in a specific domain.
-         * @type {string}
+         * Arguments passed to the app from the user.
+         * @type {Args}
          */
-        this.domain = domain;
+        this.args = args;
+        /**
+         * Options loaded for the crawl.
+         * @type {Option}
+         */
+        this.option = option;
         /**
          * Array of pages to check for more links. This list gets popped and will be empty.
          * @type {[string]}
@@ -99,8 +108,24 @@ class CrawlerRepository {
     isFreshUrl(url) {
         return this.urlsAttempted.filter(p => p === url).length === 0
             && this.isInDomain(url)
+            && this.isNotExclusion(url)
             && CrawlerRepository.isNotRecursive(url)
             && CrawlerRepository.isNotDocument(url)
+    }
+
+    /**
+     * Check to see if the url should be excluded.
+     * @param url {string} to check.
+     * @returns {boolean} true if the url is not excluded.
+     */
+    isNotExclusion(url) {
+        let urlParsed = UrlParser.parse(url);
+        for (let exclusion of this.option.index.exclusions) {
+            if (urlParsed.path.startsWith(exclusion)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -143,7 +168,7 @@ class CrawlerRepository {
      * @returns {boolean} true if it is on the domain.
      */
     isInDomain(url) {
-        return url.replace(/(https|http):/i, '').startsWith('//' + this.domain);
+        return url.replace(/(https|http):/i, '').startsWith('//' + this.args.domain);
     }
 
     /**

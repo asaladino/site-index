@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const OptionsRepository = require('../Repository/OptionsRepository');
+
 /**
  * Base service will events and project folder information.
  */
@@ -22,6 +24,13 @@ class Service {
          * @type {Map<string, Function>}
          */
         this.events = new Map();
+
+        const optionsRepository = new OptionsRepository(this.args);
+        /**
+         * Options loaded for the crawl.
+         * @type {Option}
+         */
+        this.option = optionsRepository.getOption();
     }
 
     /**
@@ -64,7 +73,7 @@ class Service {
      * @returns {string} the full path.
      */
     getProjectPath() {
-        let siteName = this.args.domain.replace(/[.]/g, '_');
+        let siteName = this.args.getSiteName();
         let projectPath = path.join(this.args.output.filename, siteName);
         if (!fs.existsSync(projectPath)) {
             fs.mkdirSync(projectPath);

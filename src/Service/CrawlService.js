@@ -10,12 +10,12 @@ const HtmlRepository = require('../Repository/HtmlRepository');
 class CrawlService extends Service {
 
     /**
-     * Start the crawl service to extract the domain urls..
+     * Start the crawl service to extract the domain urls.
      */
     start() {
         let urlsRepository = new JsonUrlsRepository(this.getPathJsonUrlsFile());
         let htmlRepository = new HtmlRepository(this.getProjectPath());
-        let crawlerRepository = new CrawlerRepository(this.args.domain);
+        let crawlerRepository = new CrawlerRepository(this.args, this.option);
         crawlerRepository.findAllUrls(/** @type {Progress} */progress => {
             this.emitProgress(progress);
             if(this.args.html) {
