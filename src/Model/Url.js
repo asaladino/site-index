@@ -1,3 +1,5 @@
+const uuidv5 = require('uuid/v5');
+
 /**
  * Url found on the site.
  */
@@ -11,7 +13,7 @@ class Url {
          * Kind of like a id for file names and look up.
          * @type {string}
          */
-        this.name = url.replace(/[^a-zA-Z0-9]/g, '_');
+        this.name = uuidv5(url, uuidv5.URL);
         /**
          * Full url found on the site.
          * @type {string}
