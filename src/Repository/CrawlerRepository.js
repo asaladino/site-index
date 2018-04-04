@@ -1,3 +1,5 @@
+let CrawlState = require('../Model/CrawlState');
+
 let Progress = require('../Model/Progress');
 let Url = require('../Model/Url');
 let Args = require('../Model/Args');
@@ -34,20 +36,10 @@ class CrawlerRepository {
          */
         this.option = option;
         /**
-         * Array of pages to check for more links. This list gets popped and will be empty.
-         * @type {[string]}
+         * Track the current crawl state.
+         * @type {CrawlState}
          */
-        this.urlsPool = [];
-        /**
-         * List of urls that have been attempted, so we don't get unending crawls.
-         * @type {[string]}
-         */
-        this.urlsAttempted = [this.initialUrl];
-        /**
-         * Array of all the urls found.
-         * @type {[Url]}
-         */
-        this.urls = [];
+        this.crawlState = new CrawlState(this.initialUrl);
     }
 
     /**
@@ -56,8 +48,8 @@ class CrawlerRepository {
      */
     findAllUrls(progress) {
         this.progress = progress;
-        if (this.urlsPool.length === 0) {
-            this.urlsPool.push(this.initialUrl);
+        if (this.crawlState.urlsPool.length === 0) {
+            this.crawlState.urlsPool.push(this.initialUrl);
         }
         return new Promise(resolve => {
             this.resolve = resolve;
@@ -70,14 +62,14 @@ class CrawlerRepository {
      * else, just adds the urls to the urls array.
      */
     crawlNextUrl() {
-        if (this.urlsPool.length === 0) {
-            return this.resolve(this.urls);
+        if (this.crawlState.urlsPool.length === 0) {
+            return this.resolve(this.crawlState.urls);
         }
-        let url = CrawlerRepository.cleanUrl(this.urlsPool.pop());
+        let url = CrawlerRepository.cleanUrl(this.crawlState.urlsPool.pop());
         JSDOM.fromURL(url).then(dom => {
             const newUrl = new Url(url);
-            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.urlsPool.length, this.urls.length));
-            this.urls.push(newUrl);
+            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.crawlState));
+            this.crawlState.urls.push(newUrl);
             const links = dom.window.document.querySelectorAll("a");
             for (let link of links) {
                 let foundUrl = CrawlerRepository.cleanUrl(link.href);
@@ -96,8 +88,8 @@ class CrawlerRepository {
      * @param url {string} to check later.
      */
     addFreshUrl(url) {
-        this.urlsPool.push(url);
-        this.urlsAttempted.push(url);
+        this.crawlState.urlsPool.push(url);
+        this.crawlState.urlsAttempted.push(url);
     }
 
     /**
@@ -106,7 +98,7 @@ class CrawlerRepository {
      * @returns {boolean} true if the url has not been attempted.
      */
     isFreshUrl(url) {
-        return this.urlsAttempted.filter(p => p === url).length === 0
+        return this.crawlState.urlsAttempted.filter(p => p === url).length === 0
             && this.isInDomain(url)
             && this.isNotExclusion(url)
             && CrawlerRepository.isNotRecursive(url)
