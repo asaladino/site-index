@@ -20,11 +20,12 @@ Site Index
 
 Options
 
-  --domain www.domain.com   (Required) Domain to crawl.                     
-  --output file             (Required) Folder to output the information to. 
-  --html                    Save the raw html to file.                      
-  --type sitemap|crawl      Use the sitemap or crawl the site for links.    
-  --verbose                 Output progress information on the index.       
-  --help                    Print this usage guide.  
+  --domain www.domain.com       (Required) Domain to crawl.
+  --output file                 (Required) Folder to output the information to.
+  --uri /path/to/file.html      You might want to add just one more path to index.
+  --html                        Save the raw html to file.
+  --type sitemap|crawl|single   Use the sitemap or crawl to index a site for links.
+  --verbose                     Output progress information on the index.
+  --help                        Print this usage guide.
 
 ```
