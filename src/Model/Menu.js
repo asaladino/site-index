@@ -26,6 +26,12 @@ module.exports = [
                 description: '(Required) Folder to output the information to.'
             },
             {
+                name: 'uri',
+                type: String,
+                typeLabel: '[underline]{/path/to/file.html}',
+                description: 'You might want to add just one more path to index.'
+            },
+            {
                 name: 'html',
                 defaultValue: false,
                 type: Boolean,
@@ -35,8 +41,8 @@ module.exports = [
                 name: 'type',
                 defaultValue: 'crawl',
                 type: String,
-                typeLabel: '[underline]{sitemap|crawl}',
-                description: 'Use the sitemap or crawl the site for links.'
+                typeLabel: '[underline]{sitemap|crawl|single}',
+                description: 'Use the sitemap or crawl to index a site for links.'
             },
             {
                 name: 'verbose',

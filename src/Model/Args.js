@@ -26,6 +26,11 @@ class Args {
          */
         this.domain = null;
         /**
+         * URI of a single path you want to add to the index.
+         * @type {string|*}
+         */
+        this.uri = null;
+        /**
          * Should progress information be output to the console?
          * @type {boolean}
          */
@@ -47,6 +52,30 @@ class Args {
      */
     isCrawl() {
         return this.type === 'crawl';
+    }
+
+    /**
+     * Adds a single page to the index.
+     * @return {boolean}
+     */
+    isSingle() {
+        return this.type === 'single';
+    }
+
+    /**
+     * Get the url for a single page crawl.
+     * @return {string} url.
+     */
+    getSingleUrl() {
+        return 'https://' + this.domain + this.uri;
+    }
+
+    /**
+     * Name of the site that is being crawled.
+     * @returns {string}
+     */
+    getSiteName() {
+        return this.domain.replace(/[.]/g, '_');
     }
 }
 

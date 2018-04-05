@@ -14,7 +14,7 @@ if (args.shouldShowHelp()) {
 } else {
     args.output.doesFolderExist();
     console.log('\nStarting Site Index');
-    if (args.isCrawl()) {
+    if (args.isCrawl() || args.isSingle()) {
         let crawlService = new CrawlService(args);
         crawlService
             .on('progress', progress => {

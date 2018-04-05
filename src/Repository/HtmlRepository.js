@@ -27,10 +27,8 @@ class HtmlRepository {
      */
     save(url, html) {
         const file = path.join(this.getProjectsHtmlFolder(), url.name + '.html');
-        return new Promise((resolve, reject) => {
-            fs.writeFileSync(file, html, function (error) {
-                reject(error);
-            });
+        return new Promise((resolve) => {
+            fs.writeFileSync(file, html);
             resolve();
         });
     }

@@ -1,8 +1,13 @@
+let CrawlState = require('../Model/CrawlState');
+
 let Progress = require('../Model/Progress');
 let Url = require('../Model/Url');
+let Args = require('../Model/Args');
+let Option = require('../Model/Option');
 
 const jsdom = require("jsdom");
 const {JSDOM} = jsdom;
+const UrlParser = require('url');
 
 /**
  * This crawler repository will use a domain name as a datasource and extract urls from it.
@@ -11,34 +16,30 @@ class CrawlerRepository {
 
     /**
      * Build a sitemap repository
-     * @param domain {string}
+     * @param args {Args}
+     * @param option {Option}
      */
-    constructor(domain) {
+    constructor(args, option) {
         /**
          * The initial sitemap url.
          * @type {string}
          */
-        this.initialUrl = 'http://' + domain;
+        this.initialUrl = 'http://' + args.domain;
         /**
-         * Keeps the crawl in a specific domain.
-         * @type {string}
+         * Arguments passed to the app from the user.
+         * @type {Args}
          */
-        this.domain = domain;
+        this.args = args;
         /**
-         * Array of pages to check for more links. This list gets popped and will be empty.
-         * @type {[string]}
+         * Options loaded for the crawl.
+         * @type {Option}
          */
-        this.urlsPool = [];
+        this.option = option;
         /**
-         * List of urls that have been attempted, so we don't get unending crawls.
-         * @type {[string]}
+         * Track the current crawl state.
+         * @type {CrawlState}
          */
-        this.urlsAttempted = [this.initialUrl];
-        /**
-         * Array of all the urls found.
-         * @type {[Url]}
-         */
-        this.urls = [];
+        this.crawlState = new CrawlState(this.initialUrl);
     }
 
     /**
@@ -47,8 +48,8 @@ class CrawlerRepository {
      */
     findAllUrls(progress) {
         this.progress = progress;
-        if (this.urlsPool.length === 0) {
-            this.urlsPool.push(this.initialUrl);
+        if (this.crawlState.urlsPool.length === 0) {
+            this.crawlState.urlsPool.push(this.initialUrl);
         }
         return new Promise(resolve => {
             this.resolve = resolve;
@@ -61,22 +62,26 @@ class CrawlerRepository {
      * else, just adds the urls to the urls array.
      */
     crawlNextUrl() {
-        if (this.urlsPool.length === 0) {
-            return this.resolve(this.urls);
+        if (this.crawlState.urlsPool.length === 0) {
+            return this.resolve(this.crawlState.urls);
         }
-        let url = CrawlerRepository.cleanUrl(this.urlsPool.pop());
+        let url = CrawlerRepository.cleanUrl(this.crawlState.urlsPool.pop());
         JSDOM.fromURL(url).then(dom => {
             const newUrl = new Url(url);
-            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.urlsPool.length, this.urls.length));
-            this.urls.push(newUrl);
-            const links = dom.window.document.querySelectorAll("a");
-            for (let link of links) {
-                let foundUrl = CrawlerRepository.cleanUrl(link.href);
-                if (this.isFreshUrl(foundUrl)) {
-                    this.addFreshUrl(foundUrl);
+            this.crawlState.urls.push(newUrl);
+            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.crawlState));
+            if(this.args.isSingle()) {
+                return this.resolve(this.crawlState.urls);
+            } else {
+                const links = dom.window.document.querySelectorAll("a");
+                for (let link of links) {
+                    let foundUrl = CrawlerRepository.cleanUrl(link.href);
+                    if (this.isFreshUrl(foundUrl)) {
+                        this.addFreshUrl(foundUrl);
+                    }
                 }
+                this.crawlNextUrl();
             }
-            this.crawlNextUrl();
         }).catch(() => {
             this.crawlNextUrl();
         });
@@ -87,8 +92,8 @@ class CrawlerRepository {
      * @param url {string} to check later.
      */
     addFreshUrl(url) {
-        this.urlsPool.push(url);
-        this.urlsAttempted.push(url);
+        this.crawlState.urlsPool.push(url);
+        this.crawlState.urlsAttempted.push(url);
     }
 
     /**
@@ -97,10 +102,26 @@ class CrawlerRepository {
      * @returns {boolean} true if the url has not been attempted.
      */
     isFreshUrl(url) {
-        return this.urlsAttempted.filter(p => p === url).length === 0
+        return this.crawlState.urlsAttempted.filter(p => p === url).length === 0
             && this.isInDomain(url)
+            && this.isNotExclusion(url)
             && CrawlerRepository.isNotRecursive(url)
             && CrawlerRepository.isNotDocument(url)
+    }
+
+    /**
+     * Check to see if the url should be excluded.
+     * @param url {string} to check.
+     * @returns {boolean} true if the url is not excluded.
+     */
+    isNotExclusion(url) {
+        let urlParsed = UrlParser.parse(url);
+        for (let exclusion of this.option.index.exclusions) {
+            if (urlParsed.path.startsWith(exclusion)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -143,7 +164,7 @@ class CrawlerRepository {
      * @returns {boolean} true if it is on the domain.
      */
     isInDomain(url) {
-        return url.replace(/(https|http):/i, '').startsWith('//' + this.domain);
+        return url.replace(/(https|http):/i, '').startsWith('//' + this.args.domain);
     }
 
     /**
