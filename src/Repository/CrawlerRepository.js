@@ -68,16 +68,20 @@ class CrawlerRepository {
         let url = CrawlerRepository.cleanUrl(this.crawlState.urlsPool.pop());
         JSDOM.fromURL(url).then(dom => {
             const newUrl = new Url(url);
-            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.crawlState));
             this.crawlState.urls.push(newUrl);
-            const links = dom.window.document.querySelectorAll("a");
-            for (let link of links) {
-                let foundUrl = CrawlerRepository.cleanUrl(link.href);
-                if (this.isFreshUrl(foundUrl)) {
-                    this.addFreshUrl(foundUrl);
+            this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.crawlState));
+            if(this.args.isSingle()) {
+                return this.resolve(this.crawlState.urls);
+            } else {
+                const links = dom.window.document.querySelectorAll("a");
+                for (let link of links) {
+                    let foundUrl = CrawlerRepository.cleanUrl(link.href);
+                    if (this.isFreshUrl(foundUrl)) {
+                        this.addFreshUrl(foundUrl);
+                    }
                 }
+                this.crawlNextUrl();
             }
-            this.crawlNextUrl();
         }).catch(() => {
             this.crawlNextUrl();
         });

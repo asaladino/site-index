@@ -14,7 +14,7 @@ if (args.shouldShowHelp()) {
 } else {
     args.output.doesFolderExist();
     console.log('\nStarting Site Index');
-    if (args.isCrawl()) {
+    if (args.isCrawl() || args.isSingle()) {
         let crawlService = new CrawlService(args);
         crawlService
             .on('progress', progress => {
@@ -24,9 +24,6 @@ if (args.shouldShowHelp()) {
             })
             .on('complete', () => console.log('Done'));
         crawlService.start();
-    } else if (args.isSingle()) {
-        let singleService = new SingleService(args);
-        singleService.start();
     } else {
         let sitemapService = new SitemapService(args);
         sitemapService

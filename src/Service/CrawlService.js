@@ -19,6 +19,9 @@ class CrawlService extends Service {
         let crawlerRepository = new CrawlerRepository(this.args, this.option);
         let crawlStatesRepository = new CrawlStatesRepository(this.getProjectPath());
         crawlerRepository.crawlState = crawlStatesRepository.read();
+        if (this.args.isSingle()) {
+            crawlerRepository.crawlState.urlsPool = [this.args.getSingleUrl()];
+        }
         crawlerRepository.findAllUrls(/** @type {Progress} */progress => {
             this.emitProgress(progress);
             crawlStatesRepository.save(progress.crawlState);

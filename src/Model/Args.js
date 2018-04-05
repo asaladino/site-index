@@ -63,6 +63,14 @@ class Args {
     }
 
     /**
+     * Get the url for a single page crawl.
+     * @return {string} url.
+     */
+    getSingleUrl() {
+        return 'https://' + this.domain + this.uri;
+    }
+
+    /**
      * Name of the site that is being crawled.
      * @returns {string}
      */
