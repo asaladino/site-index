@@ -24,6 +24,9 @@ if (args.shouldShowHelp()) {
             })
             .on('complete', () => console.log('Done'));
         crawlService.start();
+    } else if (args.isSingle()) {
+        let singleService = new SingleService(args);
+        singleService.start();
     } else {
         let sitemapService = new SitemapService(args);
         sitemapService

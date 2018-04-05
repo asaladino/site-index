@@ -26,6 +26,12 @@ module.exports = [
                 description: '(Required) Folder to output the information to.'
             },
             {
+                name: 'uri',
+                type: String,
+                typeLabel: '[underline]{/path/to/file.html}',
+                description: 'You might want to add just one more path to index.'
+            },
+            {
                 name: 'html',
                 defaultValue: false,
                 type: Boolean,

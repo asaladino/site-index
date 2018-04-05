@@ -25,7 +25,12 @@ class Service {
          */
         this.events = new Map();
 
+        /**
+         * Need to get some options.
+         * @type {OptionsRepository}
+         */
         const optionsRepository = new OptionsRepository(this.args);
+
         /**
          * Options loaded for the crawl.
          * @type {Option}
