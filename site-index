@@ -2,37 +2,16 @@
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 
+const IndexController = require('./src/Controller/IndexController');
 const menu = require('./src/Model/Menu');
 const Args = require('./src/Model/Args');
-const CrawlService = require('./src/Service/CrawlService');
-const SitemapService = require('./src/Service/SitemapService');
 
 let args = new Args(commandLineArgs(menu[1]['optionList']));
 
 if (args.shouldShowHelp()) {
     console.log(getUsage(menu));
 } else {
-    args.output.doesFolderExist();
     console.log('\nStarting Site Index');
-    if (args.isCrawl() || args.isSingle()) {
-        let crawlService = new CrawlService(args);
-        crawlService
-            .on('progress', progress => {
-                if (args.verbose) {
-                    console.log(progress.toString());
-                }
-            })
-            .on('complete', () => console.log('Done'));
-        crawlService.start();
-    } else {
-        let sitemapService = new SitemapService(args);
-        sitemapService
-            .on('progress', progress => {
-                if (args.verbose) {
-                    console.log(progress.toString());
-                }
-            })
-            .on('complete', () => console.log('Done'));
-        sitemapService.start();
-    }
+    let indexController = new IndexController(args);
+    indexController.start().then();
 }
