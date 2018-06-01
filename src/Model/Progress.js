@@ -41,6 +41,18 @@ class Progress {
         }
         return this.message;
     }
+
+    /**
+     * Something to report in the logs.
+     * @return {{urlsPoolLength: number, urlsLength: number, url: string}}
+     */
+    toLog() {
+        return {
+            urlsPoolLength:  this.crawlState.urlsPool.length,
+            urlsLength: this.crawlState.urls.length,
+            url: this.url.url
+        }
+    }
 }
 
 module.exports = Progress;

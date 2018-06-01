@@ -26,13 +26,10 @@ class CrawlService extends Service {
             this.emitProgress(progress);
             crawlStatesRepository.save(progress.crawlState);
             if (this.args.html) {
-                htmlRepository.save(progress.url, progress.html)
-                    .then(() => {
-                        this.emitProgress(Progress.buildWithMessage('Saved html'));
-                    });
+                htmlRepository.save(progress.url, progress.html).then();
             }
         }).then(urls => {
-            urlsRepository.save(urls).then(() => this.emitComplete());
+            urlsRepository.save(urls).then();
         });
     }
 }

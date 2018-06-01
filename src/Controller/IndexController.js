@@ -5,6 +5,7 @@ class IndexController {
 
     constructor(args) {
         this.args = args;
+        this.logger = new (require('../Utility/Logger'))(args);
     }
 
     start() {
@@ -14,6 +15,7 @@ class IndexController {
                 let crawlService = new CrawlService(this.args);
                 crawlService
                     .on('progress', progress => {
+                        this.logger.report(progress.toLog());
                         if (this.args.verbose) {
                             console.log(progress.toString());
                         }
@@ -27,6 +29,7 @@ class IndexController {
                 let sitemapService = new SitemapService(args);
                 sitemapService
                     .on('progress', progress => {
+                        this.logger.report(progress.toLog());
                         if (this.args.verbose) {
                             console.log(progress.toString());
                         }

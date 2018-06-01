@@ -1,6 +1,6 @@
 {
   "name": "site-index",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "  Will crawl a site and generate the json file for all the urls found. Also converts a sitemap to a json file.",
   "main": "site-index",
   "repository": "https://github.com/asaladino/site-index",
@@ -13,9 +13,10 @@
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
-    "jsdom": "^11.5.1",
+    "jsdom": "^11.11.0",
     "then-request": "^4.1.0",
     "uuid": "^3.2.1",
+    "winston": "^3.0.0-rc5",
     "xml2js": "^0.4.19"
   }
 }
