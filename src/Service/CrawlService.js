@@ -29,7 +29,7 @@ class CrawlService extends Service {
                 htmlRepository.save(progress.url, progress.html).then();
             }
         }).then(urls => {
-            urlsRepository.save(urls).then();
+            urlsRepository.save(urls).then(() => this.emitComplete());
         });
     }
 }
