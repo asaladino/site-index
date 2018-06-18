@@ -4,9 +4,8 @@
 class CrawlState {
     /**
      * Initialize a crawl state with a url.
-     * @param initialUrl to start the state.
      */
-    constructor(initialUrl) {
+    constructor() {
         /**
          * Array of pages to check for more links. This list gets popped and will be empty.
          * @type {[string]}
@@ -16,7 +15,7 @@ class CrawlState {
          * List of urls that have been attempted, so we don't get unending crawls.
          * @type {[string]}
          */
-        this.urlsAttempted = [initialUrl];
+        this.urlsAttempted = [];
         /**
          * Array of all the urls found.
          * @type {[Url]}

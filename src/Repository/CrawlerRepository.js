@@ -24,7 +24,7 @@ class CrawlerRepository {
          * The initial sitemap url.
          * @type {string}
          */
-        this.initialUrl = 'http://' + args.domain;
+        this.initialUrl = 'http://' + args.domain + "/";
         /**
          * Arguments passed to the app from the user.
          * @type {Args}
@@ -39,7 +39,7 @@ class CrawlerRepository {
          * Track the current crawl state.
          * @type {CrawlState}
          */
-        this.crawlState = new CrawlState(this.initialUrl);
+        this.crawlState = new CrawlState();
     }
 
     /**
@@ -50,6 +50,7 @@ class CrawlerRepository {
         this.progress = progress;
         if (this.crawlState.urlsPool.length === 0) {
             this.crawlState.urlsPool.push(this.initialUrl);
+            this.crawlState.urlsAttempted.push(this.initialUrl);
         }
         return new Promise(resolve => {
             this.resolve = resolve;
@@ -70,7 +71,7 @@ class CrawlerRepository {
             const newUrl = new Url(url);
             this.crawlState.urls.push(newUrl);
             this.progress(new Progress(newUrl, dom.window.document.documentElement.innerHTML, this.crawlState));
-            if(this.args.isSingle()) {
+            if (this.args.isSingle()) {
                 return this.resolve(this.crawlState.urls);
             } else {
                 const links = dom.window.document.querySelectorAll("a");
@@ -102,11 +103,16 @@ class CrawlerRepository {
      * @returns {boolean} true if the url has not been attempted.
      */
     isFreshUrl(url) {
-        return this.crawlState.urlsAttempted.filter(p => p === url).length === 0
+        // Remove protocol and trailing slash to avoid duplicate indexing.
+        const checkUrl = url.replace(/(https|http):/i, '').replace(/\/+$/, '');
+        return this.crawlState.urlsAttempted.filter(/** @param p {String} **/p => {
+                const existingUrl = p.replace(/(https|http):/i, '').replace(/\/+$/, '');
+                return existingUrl === checkUrl
+            }).length === 0
             && this.isInDomain(url)
             && this.isNotExclusion(url)
             && CrawlerRepository.isNotRecursive(url)
-            && CrawlerRepository.isNotDocument(url)
+            && CrawlerRepository.isNotDocument(url);
     }
 
     /**
