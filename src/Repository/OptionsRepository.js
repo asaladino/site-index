@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require("path");
 
 const Option = require('../Model/Option');
-const OptionDefaults = require('../Model/OptionDefaults');
-const Args = require('../Model/Args');
+const OptionDefaults = require('../Assets/OptionDefaults.json');
+const Args = require('../Model/Args').default;
 
 /**
  * Save and load options for the index.
