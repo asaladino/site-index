@@ -6,7 +6,8 @@
   "repository": "https://github.com/asaladino/site-index",
   "scripts": {
     "start": "node ./bin/site-index",
-    "build": "babel src/ -d lib/",
+    "build": "babel src -d lib -s",
+    "babel": "babel --help",
     "assets": "",
     "prepublish": "npm run build",
     "flow": "flow",

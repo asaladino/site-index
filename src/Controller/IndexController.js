@@ -1,10 +1,14 @@
 const CrawlService = require("../Service/CrawlService");
 const SitemapService = require("../Service/SitemapService");
 
+import Logger from '../Utility/Logger';
+
+
 class IndexController {
+
   constructor(args) {
     this.args = args;
-    this.logger = new (require("../Utility/Logger"))(args);
+    this.logger = new Logger(args);
   }
 
   start(callback = (event, progress) => {}) {

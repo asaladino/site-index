@@ -30,7 +30,7 @@ class CrawlerRepository {
    */
   crawlStatesRepository: SqliteCrawlStatesRepository;
   progress: Progress;
-  resolve = (urls: Url[]) => {};
+  resolve: any;
 
   /**
    * Build a sitemap repository
