@@ -11,15 +11,19 @@ const Args = require('../Model/Args');
 class OptionsRepository {
     constructor(args) {
         /**
-         * Passed in from the commandline.
+         * Passed in from the command-line.
          * @type {Args}
          */
         this.args = args;
         /**
+         * Folder where the options are saved.
+         */
+        this.folder = this.createFolder();
+        /**
          * Path to the options file.
          * @type {string}
          */
-        this.file = path.join(this.args.output.filename, 'options', this.args.getSiteName() + '.json');
+        this.file = path.join(this.folder, this.args.getSiteName() + '.json');
     }
 
     /**
@@ -46,6 +50,16 @@ class OptionsRepository {
         fs.writeFileSync(this.file, JSON.stringify(option, null, 2));
     }
 
+    /**
+     * Create the options folder.
+     */
+    createFolder() {
+      const optionsFolder = path.join(this.args.output.filename, 'options');;
+      if (!fs.existsSync(optionsFolder)) {
+        fs.mkdirSync(optionsFolder);
+      }
+      return optionsFolder;
+    }
 }
 
 module.exports = OptionsRepository;

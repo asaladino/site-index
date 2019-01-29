@@ -1,5 +1,6 @@
 const CrawlService = require('../Service/CrawlService');
 const SitemapService = require('../Service/SitemapService');
+const Progress = require('../Model/Progress');
 
 class IndexController {
 
@@ -14,7 +15,7 @@ class IndexController {
             if (this.args.isCrawl() || this.args.isSingle()) {
                 let crawlService = new CrawlService(this.args);
                 crawlService
-                    .on('progress', progress => {
+                    .on('progress', /** @type Progress */progress => {
                         this.logger.report(progress.toLog());
                         if (this.args.verbose) {
                             console.log(progress.toString());
@@ -28,7 +29,7 @@ class IndexController {
             } else {
                 let sitemapService = new SitemapService(args);
                 sitemapService
-                    .on('progress', progress => {
+                    .on('progress', /** @type Progress */progress => {
                         this.logger.report(progress.toLog());
                         if (this.args.verbose) {
                             console.log(progress.toString());
