@@ -1,11 +1,9 @@
-const CrawlService = require("../Service/CrawlService");
-const SitemapService = require("../Service/SitemapService");
+import CrawlService from "../Service/CrawlService";
+import SitemapService from "../Service/SitemapService";
 
-import Logger from '../Utility/Logger';
+import Logger from "../Utility/Logger";
 
-
-class IndexController {
-
+export default class IndexController {
   constructor(args) {
     this.args = args;
     this.logger = new Logger(args);
@@ -54,5 +52,3 @@ class IndexController {
     });
   }
 }
-
-module.exports = IndexController;

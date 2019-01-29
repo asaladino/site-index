@@ -12,7 +12,7 @@ import SqliteCrawlStatesRepository from "./SqliteCrawlStatesRepository";
 /**
  * This crawler repository will use a domain name as a data-source and extract urls from it.
  */
-class CrawlerRepository {
+export default class CrawlerRepository {
   /**
    * The initial sitemap url.
    */
@@ -70,7 +70,7 @@ class CrawlerRepository {
     JSDOM.fromURL(url)
       .then(dom => {
         const newUrl = new Url(url);
-        this.crawlStatesRepository.addUrl(newUrl); // Add check if the url exists
+        this.crawlStatesRepository.addUrl(newUrl);
         const { innerHTML } = dom.window.document.documentElement;
         const urlsSize = this.crawlStatesRepository.urlsSize();
         this.progress(
@@ -169,5 +169,3 @@ class CrawlerRepository {
     return url.split("?")[0].split("#")[0];
   }
 }
-
-module.exports = CrawlerRepository;

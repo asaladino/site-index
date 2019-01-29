@@ -1,4 +1,4 @@
-const Args = require("../../src/Model/Args").default;
+import Args from "../../src/Model/Args";
 
 test("should help be shown", () => {
   const empty = {};

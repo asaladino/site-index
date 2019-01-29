@@ -1,32 +1,30 @@
-const uuidv5 = require('uuid/v5');
+import uuidv5, { URL } from "uuid/v5";
 
 /**
  * Url found on the site.
  */
-class Url {
+export default class Url {
+  /**
+   * Build a url.
+   * @param url {string} found in the sitemap.
+   */
+  constructor(url) {
     /**
-     * Build a url.
-     * @param url {string} found in the sitemap.
+     * Kind of like a id for file names and look up.
+     * @type {string}
      */
-    constructor(url) {
-        /**
-         * Kind of like a id for file names and look up.
-         * @type {string}
-         */
-        this.name = uuidv5(url, uuidv5.URL);
-        /**
-         * Full url found on the site.
-         * @type {string}
-         */
-        this.url = url;
+    this.name = uuidv5(url, URL);
+    /**
+     * Full url found on the site.
+     * @type {string}
+     */
+    this.url = url;
 
-        // noinspection JSUnusedGlobalSymbols
-        /**
-         * This is used by the a11y reporter to access logged in sites.
-         * @type {string}
-         */
-        this.fragment = '';
-    }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * This is used by the a11y reporter to access logged in sites.
+     * @type {string}
+     */
+    this.fragment = "";
+  }
 }
-
-module.exports = Url;

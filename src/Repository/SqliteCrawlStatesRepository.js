@@ -1,11 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const Database = require('better-sqlite3');
+import { existsSync, mkdirSync, copyFileSync } from "fs";
+import { join, dirname } from "path";
+import Database from "better-sqlite3";
 
 /**
  * Read and write the current crawl state to file.
  */
-class SqliteCrawlStatesRepository {
+export default class SqliteCrawlStatesRepository {
   constructor(projectFolder) {
     this.projectFolder = projectFolder;
 
@@ -28,7 +28,7 @@ class SqliteCrawlStatesRepository {
   initUrlsPool(urls) {
     this.db.prepare("DELETE FROM urls_pool").run();
     this.db.prepare("VACUUM").run();
-    urls.forEach(url => this.insertUrlsPoolStmt.run([url]))
+    urls.forEach(url => this.insertUrlsPoolStmt.run([url]));
   }
 
   /**
@@ -36,8 +36,10 @@ class SqliteCrawlStatesRepository {
    * @returns {int}
    */
   urlsPoolSize() {
-      const result = this.db.prepare('SELECT COUNT(*) as size FROM urls_pool').get();
-      return result.size;
+    const result = this.db
+      .prepare("SELECT COUNT(*) as size FROM urls_pool")
+      .get();
+    return result.size;
   }
 
   /**
@@ -45,7 +47,7 @@ class SqliteCrawlStatesRepository {
    * @returns {int}
    */
   urlsSize() {
-      return this.db.prepare('SELECT COUNT(*) as size FROM urls').get().size;
+    return this.db.prepare("SELECT COUNT(*) as size FROM urls").get().size;
   }
 
   /**
@@ -53,7 +55,7 @@ class SqliteCrawlStatesRepository {
    * @param {string} url to add
    */
   addPoolUrl(url) {
-    if(this.findAttemptedUrls(url) === 0) {
+    if (this.findAttemptedUrls(url) === 0) {
       this.insertUrlsPoolStmt.run([url]);
       this.insertUrlsAttemptedStmt.run([url]);
     }
@@ -61,7 +63,7 @@ class SqliteCrawlStatesRepository {
 
   /**
    * Add a found url.
-   * @param {Url} url 
+   * @param {Url} url
    */
   addUrl(url) {
     this.insertUrlsStmt.run([url.name, url.url]);
@@ -72,17 +74,17 @@ class SqliteCrawlStatesRepository {
    * @returns {[Url]}
    */
   findAllUrls() {
-      return this.db.prepare('SELECT * FROM urls').all();
+    return this.db.prepare("SELECT * FROM urls").all();
   }
 
   /**
    * Find the number of attempted urls.
-   * @param {string} url 
+   * @param {string} url
    * @return {int}
    */
   findAttemptedUrls(url) {
     // Remove protocol and trailing slash to avoid duplicate indexing.
-    const checkUrl = url.replace(/(https|http)/i, '');
+    const checkUrl = url.replace(/(https|http)/i, "");
     const query = `SELECT COUNT(*) as size FROM urls_attempted WHERE url='http${checkUrl}' OR url='https${checkUrl}'`;
     const result = this.db.prepare(query).get();
     return result.size;
@@ -93,9 +95,9 @@ class SqliteCrawlStatesRepository {
    * @returns {string}
    */
   popPoolUrl() {
-      const url = this.db.prepare('SELECT * FROM urls_pool LIMIT 1').get();
-      this.db.prepare('DELETE FROM urls_pool WHERE url = ?').run([url.url]);
-      return url.url;
+    const url = this.db.prepare("SELECT * FROM urls_pool LIMIT 1").get();
+    this.db.prepare("DELETE FROM urls_pool WHERE url = ?").run([url.url]);
+    return url.url;
   }
 
   /**
@@ -103,21 +105,19 @@ class SqliteCrawlStatesRepository {
    * @returns {string} for the html folder.
    */
   createIndexFolder() {
-    let projectsPathUrls = path.join(this.projectFolder, "urls");
-    if (!fs.existsSync(projectsPathUrls)) {
-      fs.mkdirSync(projectsPathUrls);
+    let projectsPathUrls = join(this.projectFolder, "urls");
+    if (!existsSync(projectsPathUrls)) {
+      mkdirSync(projectsPathUrls);
     }
 
-    this.databaseFile = path.join(projectsPathUrls, "crawl_state.sqlite");
+    this.databaseFile = join(projectsPathUrls, "crawl_state.sqlite");
 
-    if (!fs.existsSync(this.databaseFile)) {
-      let tempDbFile = path.join(
-        path.dirname(__filename),
+    if (!existsSync(this.databaseFile)) {
+      let tempDbFile = join(
+        dirname(__filename),
         "../Assets/crawl_state.sqlite"
       );
-      fs.copyFileSync(tempDbFile, this.databaseFile);
+      copyFileSync(tempDbFile, this.databaseFile);
     }
   }
 }
-
-module.exports = SqliteCrawlStatesRepository;
