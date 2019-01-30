@@ -1,8 +1,12 @@
+// @flow
 import FileDetails from './FileDetails';
+
+const getFileDetails = (filename: string): FileDetails => {
+    return new FileDetails(filename);
+}
 
 /**
  * Available options for the site index.
- * @type {*[]}
  */
 export default [
     {
@@ -21,7 +25,7 @@ export default [
             },
             {
                 name: 'output',
-                type: filename => new FileDetails(filename),
+                type: getFileDetails,
                 typeLabel: '[underline]{file}',
                 description: '(Required) Folder to output the information to.'
             },

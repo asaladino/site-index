@@ -1,4 +1,6 @@
+// @flow
 import { writeFileSync } from "fs";
+import Url from "../Model/Url";
 
 /**
  * Save the urls to a json file.
@@ -6,18 +8,16 @@ import { writeFileSync } from "fs";
 export default class JsonUrlsRepository {
   /**
    * Build a json url repo.
-   * @param file
    */
-  constructor(file) {
+  file: string;
+  constructor(file: string) {
     this.file = file;
   }
 
   /**
    * Save urls to a json file.
-   * @param urls {[Url]}
-   * @returns {Promise}
    */
-  save(urls) {
+  save(urls: Url[]): Promise<any> {
     return new Promise(resolve => {
       writeFileSync(this.file, JSON.stringify(urls));
       resolve();

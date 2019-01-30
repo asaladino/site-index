@@ -29,7 +29,7 @@ export default class CrawlerRepository {
    * Repository to access the crawl state.
    */
   crawlStatesRepository: SqliteCrawlStatesRepository;
-  progress: Progress;
+  progress: (Progress) => void;
   resolve: any;
 
   /**
@@ -44,7 +44,7 @@ export default class CrawlerRepository {
   /**
    * Find all the urls on a site.
    */
-  findAllUrls(progress: Progress): Promise<any> {
+  findAllUrls(progress: (Progress) => void): Promise<any> {
     this.progress = progress;
     if (this.crawlStatesRepository.urlsPoolSize() === 0) {
       this.crawlStatesRepository.addPoolUrl(this.initialUrl);
