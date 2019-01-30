@@ -2,7 +2,9 @@
 
 Site Index will crawl a domain and index any reachable html urls then output to a urls.json file.
 
-To start an index, run the `site-index` file
+## Index a Site
+
+To start an index, run the `node bin\site-index` file
 
 ```
 ./site-index --domain "codingsimply.com" --verbose --html --type crawl --output "/some/reports"
