@@ -1,51 +1,70 @@
-const fs = require('fs');
-const path = require("path");
+// @flow
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
+import { join } from "path";
 
-const Option = require('../Model/Option');
-const OptionDefaults = require('../Model/OptionDefaults');
-const Args = require('../Model/Args');
+import Option from "../Model/Option";
+import OptionDefaults from "../Assets/OptionDefaults.json";
+import Args from "../Model/Args";
 
 /**
  * Save and load options for the index.
  */
-class OptionsRepository {
-    constructor(args) {
-        /**
-         * Passed in from the commandline.
-         * @type {Args}
-         */
-        this.args = args;
-        /**
-         * Path to the options file.
-         * @type {string}
-         */
-        this.file = path.join(this.args.output.filename, 'options', this.args.getSiteName() + '.json');
-    }
+export default class OptionsRepository {
+  /**
+   * Passed in from the command-line.
+   */
+  args: Args;
+  /**
+   * Folder where the options are saved.
+   */
+  folder: string;
+  /**
+   * Path to the options file.
+   */
+  file: string;
+  /**
+   * Options for the site indexing.
+   */
+  option: Option;
 
-    /**
-     * Get the option from file or load defaults or load from memory.
-     * @returns {Option}
-     */
-    getOption() {
-        if (!this.option) {
-            if (fs.existsSync(this.file)) {
-                this.option = new Option(JSON.parse(fs.readFileSync(this.file).toString()));
-            } else {
-                this.option = new Option(OptionDefaults);
-                this.save(this.option);
-            }
-        }
-        return this.option;
-    }
+  constructor(args: Args) {
+    this.args = args;
+    this.folder = this.createFolder();
+    this.file = join(this.folder, this.args.getSiteName() + ".json");
+  }
 
-    /**
-     * Save the option to file.
-     * @param option {Option}
-     */
-    save(option) {
-        fs.writeFileSync(this.file, JSON.stringify(option, null, 2));
+  /**
+   * Get the option from file or load defaults or load from memory.
+   */
+  getOption(): Option {
+    if (this.option == null) {
+      if (existsSync(this.file)) {
+        this.option = new Option(
+          JSON.parse(readFileSync(this.file).toString())
+        );
+      } else {
+        this.option = new Option(OptionDefaults);
+        this.save(this.option);
+      }
     }
+    return this.option;
+  }
 
+  /**
+   * Save the option to file.
+   */
+  save(option: Option) {
+    writeFileSync(this.file, JSON.stringify(option, null, 2));
+  }
+
+  /**
+   * Create the options folder.
+   */
+  createFolder(): string {
+    const optionsFolder = join(this.args.output.filename, "options");
+    if (!existsSync(optionsFolder)) {
+      mkdirSync(optionsFolder);
+    }
+    return optionsFolder;
+  }
 }
-
-module.exports = OptionsRepository;

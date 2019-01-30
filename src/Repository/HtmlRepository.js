@@ -1,49 +1,43 @@
-const fs = require('fs');
-const Url = require('../Model/Url');
-const path = require("path");
+// @flow
+import { writeFileSync, existsSync, mkdirSync } from "fs";
+import Url from "../Model/Url";
+import { join } from "path";
 
 /**
  * Save the url html to file.
  */
-class HtmlRepository {
+export default class HtmlRepository {
+  /**
+   * Location to the html folder in the project.
+   */
+  projectFolder: string;
 
-    /**
-     * Build a json url repo.
-     * @param projectFolder {string}
-     */
-    constructor(projectFolder) {
-        /**
-         * Location to the html folder in the project.
-         * @type {string}
-         */
-        this.projectFolder = projectFolder;
-    }
+  /**
+   * Build a json url repo.
+   */
+  constructor(projectFolder: string) {
+    this.projectFolder = projectFolder;
+  }
 
-    /**
-     * Save html to a file.
-     * @param url {Url}
-     * @param html {string}
-     * @returns {Promise}
-     */
-    save(url, html) {
-        const file = path.join(this.getProjectsHtmlFolder(), url.name + '.html');
-        return new Promise((resolve) => {
-            fs.writeFileSync(file, html);
-            resolve();
-        });
-    }
+  /**
+   * Save html to a file.
+   */
+  save(url: Url, html: string): Promise<any> {
+    const file = join(this.getProjectsHtmlFolder(), url.name + ".html");
+    return new Promise(resolve => {
+      writeFileSync(file, html);
+      resolve();
+    });
+  }
 
-    /**
-     * Creates the html folder in the project if it doesn't exist.
-     * @returns {string} for the html folder.
-     */
-    getProjectsHtmlFolder() {
-        let projectsPathHtml = path.join(this.projectFolder, 'html');
-        if (!fs.existsSync(projectsPathHtml)) {
-            fs.mkdirSync(projectsPathHtml);
-        }
-        return projectsPathHtml;
+  /**
+   * Creates the html folder in the project if it doesn't exist.
+   */
+  getProjectsHtmlFolder(): string {
+    let projectsPathHtml = join(this.projectFolder, "html");
+    if (!existsSync(projectsPathHtml)) {
+      mkdirSync(projectsPathHtml);
     }
+    return projectsPathHtml;
+  }
 }
-
-module.exports = HtmlRepository;
