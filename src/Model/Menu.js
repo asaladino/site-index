@@ -1,10 +1,14 @@
-const FileDetails = require('./FileDetails');
+// @flow
+import FileDetails from './FileDetails';
+
+const getFileDetails = (filename: string): FileDetails => {
+    return new FileDetails(filename);
+}
 
 /**
  * Available options for the site index.
- * @type {*[]}
  */
-module.exports = [
+export default [
     {
         header: 'Site Index',
         content: 'Will crawl a site and generate the json file for all the urls found.' +
@@ -21,7 +25,7 @@ module.exports = [
             },
             {
                 name: 'output',
-                type: filename => new FileDetails(filename),
+                type: getFileDetails,
                 typeLabel: '[underline]{file}',
                 description: '(Required) Folder to output the information to.'
             },

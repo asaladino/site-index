@@ -1,56 +1,55 @@
-let Progress = require("../Model/Progress");
-let Url = require("../Model/Url");
-let Args = require("../Model/Args");
-let Option = require("../Model/Option");
+// @flow
+import { JSDOM } from "jsdom";
+import UrlParser from "url";
 
-let SqliteCrawlStatesRepository = require("./SqliteCrawlStatesRepository");
+import Progress from "../Model/Progress";
+import Url from "../Model/Url";
+import Args from "../Model/Args";
+import Option from "../Model/Option";
 
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const UrlParser = require("url");
+import SqliteCrawlStatesRepository from "./SqliteCrawlStatesRepository";
 
 /**
- * This crawler repository will use a domain name as a datasource and extract urls from it.
+ * This crawler repository will use a domain name as a data-source and extract urls from it.
  */
-class CrawlerRepository {
+export default class CrawlerRepository {
+  /**
+   * The initial sitemap url.
+   */
+  initialUrl: string;
+  /**
+   * Arguments passed to the app from the user.
+   */
+  args: Args;
+  /**
+   * Options loaded for the crawl.
+   */
+  option: Option;
+  /**
+   * Repository to access the crawl state.
+   */
+  crawlStatesRepository: SqliteCrawlStatesRepository;
+  progress: (Progress) => void;
+  resolve: any;
+
   /**
    * Build a sitemap repository
-   * @param args {Args}
-   * @param option {Option}
    */
-  constructor(args, option) {
-    /**
-     * The initial sitemap url.
-     * @type {string}
-     */
+  constructor(args: Args, option: Option) {
     this.initialUrl = `http://${args.domain}/`;
-    /**
-     * Arguments passed to the app from the user.
-     * @type {Args}
-     */
     this.args = args;
-    /**
-     * Options loaded for the crawl.
-     * @type {Option}
-     */
     this.option = option;
-    /**
-     * Repository to access the crawl state.
-     * @type {SqliteCrawlStatesRepository}
-     */
-    this.crawlStatesRepository = null;
   }
 
   /**
    * Find all the urls on a site.
-   * @returns {Promise}
    */
-  findAllUrls(progress) {
+  findAllUrls(progress: (Progress) => void): Promise<any> {
     this.progress = progress;
     if (this.crawlStatesRepository.urlsPoolSize() === 0) {
       this.crawlStatesRepository.addPoolUrl(this.initialUrl);
     }
-    return new Promise(resolve => {
+    return new Promise<Url[]>(resolve => {
       this.resolve = resolve;
       this.crawlNextUrl();
     });
@@ -71,10 +70,12 @@ class CrawlerRepository {
     JSDOM.fromURL(url)
       .then(dom => {
         const newUrl = new Url(url);
-        this.crawlStatesRepository.addUrl(newUrl); // Add check if the url exists
+        this.crawlStatesRepository.addUrl(newUrl);
         const { innerHTML } = dom.window.document.documentElement;
         const urlsSize = this.crawlStatesRepository.urlsSize();
-        this.progress(new Progress(newUrl, innerHTML, urlsSize, urlsPoolSize - 1));
+        this.progress(
+          new Progress(newUrl, innerHTML, urlsSize, urlsPoolSize - 1)
+        );
         if (this.args.isSingle()) {
           return this.resolve(this.crawlStatesRepository.findAllUrls());
         } else {
@@ -83,7 +84,7 @@ class CrawlerRepository {
           for (let link of links) {
             let foundUrl = CrawlerRepository.cleanUrl(link.href);
             if (this.isFreshUrl(foundUrl)) {
-                this.crawlStatesRepository.addPoolUrl(foundUrl);
+              this.crawlStatesRepository.addPoolUrl(foundUrl);
             }
           }
           this.crawlNextUrl();
@@ -96,10 +97,9 @@ class CrawlerRepository {
 
   /**
    * Has the url been crawled before?
-   * @param url {string} to check.
    * @returns {boolean} true if the url has not been attempted.
    */
-  isFreshUrl(url) {
+  isFreshUrl(url: string) {
     const urls = this.crawlStatesRepository.findAttemptedUrls(url);
     return (
       urls === 0 &&
@@ -112,13 +112,11 @@ class CrawlerRepository {
 
   /**
    * Check to see if the url should be excluded.
-   * @param url {string} to check.
-   * @returns {boolean} true if the url is not excluded.
    */
-  isNotExclusion(url) {
-    let urlParsed = UrlParser.parse(url);
+  isNotExclusion(url: string): boolean {
+    let path: string = (UrlParser.parse(url): any).urlsParsed;
     for (let exclusion of this.option.index.exclusions) {
-      if (urlParsed.path.startsWith(exclusion)) {
+      if (path.startsWith(exclusion)) {
         return false;
       }
     }
@@ -127,13 +125,9 @@ class CrawlerRepository {
 
   /**
    * This crawler only crawls html pages so make sure it is not something else.
-   *
    * The next version will handle every document type.
-   *
-   * @param url {string} to check.
-   * @returns {boolean} true if the url is not a document.
    */
-  static isNotDocument(url) {
+  static isNotDocument(url: string): boolean {
     return (
       !url.endsWith(".pdf") &&
       !url.endsWith(".jpg") &&
@@ -146,10 +140,8 @@ class CrawlerRepository {
   /**
    * Some sites I have crawled urls that are recursive and grow without a 404 being thrown. This
    * method attempts to avoid those pages.
-   * @param url {string} to check.
-   * @returns {boolean} true if the url is not recursive.
    */
-  static isNotRecursive(url) {
+  static isNotRecursive(url: string): boolean {
     let uri = url.replace(/(https|http):/i, "").split("/");
     const entries = uri.splice(3, uri.length);
     for (let entry of entries) {
@@ -163,10 +155,8 @@ class CrawlerRepository {
 
   /**
    * The index will only crawl urls on the given domain.
-   * @param url {string} to check.
-   * @returns {boolean} true if it is on the domain.
    */
-  isInDomain(url) {
+  isInDomain(url: string): boolean {
     return url
       .replace(/(https|http):/i, "")
       .startsWith("//" + this.args.domain);
@@ -174,12 +164,8 @@ class CrawlerRepository {
 
   /**
    * Remove url params and hashes. They can lead to recursion.
-   * @param url {string} to clean.
-   * @returns {string} a url without params and hashes.
    */
-  static cleanUrl(url) {
+  static cleanUrl(url: string): string {
     return url.split("?")[0].split("#")[0];
   }
 }
-
-module.exports = CrawlerRepository;
