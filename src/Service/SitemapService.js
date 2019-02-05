@@ -1,3 +1,4 @@
+// @flow
 import Service from "./Service";
 import SitemapRepository from "../Repository/SitemapRepository";
 import JsonUrlsRepository from "../Repository/JsonUrlsRepository";

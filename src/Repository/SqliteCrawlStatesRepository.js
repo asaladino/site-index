@@ -71,7 +71,7 @@ export default class SqliteCrawlStatesRepository {
    * Add a found url.
    */
   addUrl(url: Url) {
-    this.insertUrlsStmt.run([url.name, url.url]);
+    this.insertUrlsStmt.run([url.url, url.name]);
   }
 
   /**
