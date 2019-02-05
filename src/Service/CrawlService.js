@@ -1,3 +1,4 @@
+// @flow
 import Service from "./Service";
 import Progress from "../Model/Progress";
 import JsonUrlsRepository from "../Repository/JsonUrlsRepository";
@@ -23,18 +24,17 @@ export default class CrawlService extends Service {
     );
     crawlerRepository.crawlStatesRepository = crawlStatesRepository;
 
-    if (this.args.isSingle()) {
-      crawlerRepository.initUrlsPool([this.args.getSingleUrl()]);
+    const initUrl = this.args.getSingleUrl();
+    if (this.args.isSingle() && initUrl != null) {
+      crawlStatesRepository.initUrlsPool([initUrl]);
     }
     crawlerRepository
-      .findAllUrls(
-        /** @type {Progress} */ progress => {
-          this.emitProgress(progress);
-          if (this.args.html) {
-            htmlRepository.save(progress.url, progress.html).then();
-          }
+      .findAllUrls((progress: Progress) => {
+        this.emitProgress(progress);
+        if (this.args.html && progress.url != null && progress.html != null) {
+          htmlRepository.save(progress.url, progress.html).then();
         }
-      )
+      })
       .then(urls => {
         urlsRepository.save(urls).then(() => this.emitComplete());
       });
