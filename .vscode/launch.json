@@ -11,8 +11,9 @@
             "program": "${workspaceFolder}\\bin\\site-index",
             "args": [
                 "--domain=codingsimply.com",
-                "--output=C:\\Users\\Adam\\Documents\\ellucian\\reports\\",
-                "--verbose"
+                "--output=C:\\Users\\Adam\\Documents\\programming\\reports\\",
+                "--verbose",
+                "--html"
             ]
         }
     ]
