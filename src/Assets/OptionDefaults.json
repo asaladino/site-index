@@ -1,5 +1,6 @@
 {
   "index": {
-    "exclusions": []
+    "exclusions": [],
+    "waitForRender": 1000
   }
 }
