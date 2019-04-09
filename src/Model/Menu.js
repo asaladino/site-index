@@ -12,7 +12,7 @@ export default [
     {
         header: 'Site Index',
         content: 'Will crawl a site and generate the json file for all the urls found.' +
-        ' Also converts a sitemap to a json file.'
+            ' Also converts a sitemap to a json file.'
     },
     {
         header: 'Options',
