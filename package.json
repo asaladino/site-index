@@ -21,7 +21,7 @@
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
-    "puppeteer": "^1.14.0",
+    "puppeteer": "^1.15.0",
     "then-request": "^4.1.0",
     "uuid": "^3.2.1",
     "winston": "^3.0.0-rc5",

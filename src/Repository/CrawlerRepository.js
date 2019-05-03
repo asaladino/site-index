@@ -51,7 +51,7 @@ export default class CrawlerRepository {
         if (this.crawlStatesRepository.urlsPoolSize() === 0) {
             this.crawlStatesRepository.addPoolUrl(this.initialUrl);
         }
-        this.browser = await puppeteer.launch();
+        this.browser = await puppeteer.launch({ignoreHTTPSErrors: true, headless: true});
         this.page = await this.browser.newPage();
         this.page.setJavaScriptEnabled(true);
         return new Promise<Url[]>(resolve => {
@@ -67,7 +67,10 @@ export default class CrawlerRepository {
      */
     async processPage(url: string) {
         await this.page.goto(url, {"waitUntil": "networkidle2"});
-        await this.page.waitFor(this.option.index.waitForRender);
+        const {waitForRender} = this.option.index;
+        if (waitForRender) {
+            await this.page.waitFor(waitForRender);
+        }
         return await this.page.mainFrame().content();
     }
 
@@ -128,7 +131,7 @@ export default class CrawlerRepository {
      * Check to see if the url should be excluded.
      */
     isNotExclusion(url: string): boolean {
-        let path: string = (UrlParser.parse(url): any).urlsParsed;
+        let {path} = UrlParser.parse(url);
         for (let exclusion of this.option.index.exclusions) {
             if (path.startsWith(exclusion)) {
                 return false;
