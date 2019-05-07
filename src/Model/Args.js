@@ -20,6 +20,10 @@ export default class Args {
      */
     html: boolean;
     /**
+     * Should the headers be saved?
+     */
+    headers: boolean;
+    /**
      * Domain being indexed.
      */
     domain: string;

@@ -42,6 +42,12 @@ export default [
                 description: 'Save the raw html to file.'
             },
             {
+                name: 'headers',
+                defaultValue: false,
+                type: Boolean,
+                description: 'Save the response headers to file.'
+            },
+            {
                 name: 'type',
                 defaultValue: 'crawl',
                 type: String,
