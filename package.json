@@ -17,6 +17,7 @@
   "author": "Adam Saladino<adam@codingsimply.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "better-sqlite3": "^5.4.0",
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",

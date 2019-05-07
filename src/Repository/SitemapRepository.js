@@ -57,7 +57,7 @@ export default class SitemapRepository {
      */
     parseSiteMap() {
         let url = this.sitemaps.pop();
-        this.progress(new Progress(new Url(url), null, this.sitemaps.length, this.urls.length));
+        this.progress(new Progress(new Url(url), null, null, this.sitemaps.length, this.urls.length));
         request("GET", url).done(res => {
             let xml = res.getBody("utf8");
             parseString(xml, (err, result) => {

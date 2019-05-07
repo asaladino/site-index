@@ -1,5 +1,6 @@
 // @flow
 import UrlParser from "url";
+import axios from 'axios';
 
 import Progress from "../Model/Progress";
 import Url from "../Model/Url";
@@ -71,7 +72,12 @@ export default class CrawlerRepository {
         if (waitForRender) {
             await this.page.waitFor(waitForRender);
         }
-        return await this.page.mainFrame().content();
+        const response = await axios(url);
+        const content = await this.page.mainFrame().content();
+        return {
+            headers: response.headers,
+            html: content
+        }
     }
 
     /**
@@ -87,12 +93,12 @@ export default class CrawlerRepository {
         let url = CrawlerRepository.cleanUrl(
             this.crawlStatesRepository.popPoolUrl()
         );
-        this.processPage(url).then(async innerHTML => {
+        this.processPage(url).then(async data => {
             const newUrl = new Url(url);
             this.crawlStatesRepository.addUrl(newUrl);
             const urlsSize = this.crawlStatesRepository.urlsSize();
             this.progress(
-                new Progress(newUrl, innerHTML, urlsSize, urlsPoolSize - 1)
+                new Progress(newUrl, data.html, data.headers, urlsSize, urlsPoolSize - 1)
             );
             if (this.args.isSingle()) {
                 this.resolve(this.crawlStatesRepository.findAllUrls());

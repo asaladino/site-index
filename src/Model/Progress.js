@@ -13,6 +13,7 @@ type ProgressLog = {
 export default class Progress {
     url: ?Url;
     html: ?string;
+    headers: ?any;
     urls: number;
     urlsPool: number;
     message: ?string;
@@ -21,6 +22,7 @@ export default class Progress {
      * Build a progress object.
      * @param url {Url} current url
      * @param html {string} for the current url.
+     * @param headers {any} for the current url.
      * @param urls {int} urls found.
      * @param urlsPool {int} left to progress through.
      * @param message {string} Message to display.
@@ -28,12 +30,14 @@ export default class Progress {
     constructor(
         url: ?Url = null,
         html: ?string = null,
+        headers: ?any = null,
         urls: number = 0,
         urlsPool: number = 0,
         message: ?string = null
     ) {
         this.url = url;
         this.html = html;
+        this.headers = headers;
         this.urls = urls;
         this.urlsPool = urlsPool;
         this.message = message;
