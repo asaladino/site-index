@@ -1,9 +1,9 @@
 // @flow
-import FileDetails from './FileDetails';
+import FileDetails from './FileDetails.js';
 
 const getFileDetails = (filename: string): FileDetails => {
     return new FileDetails(filename);
-}
+};
 
 /**
  * Available options for the site index.

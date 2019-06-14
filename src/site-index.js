@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-const commandLineArgs = require("command-line-args");
-const getUsage = require("command-line-usage");
+import commandLineArgs from "command-line-args";
+import getUsage from "command-line-usage";
 
-const IndexController = require("../lib/Controller/IndexController").default;
-const menu = require("../lib/Model/Menu").default;
-const Args = require("../lib/Model/Args").default;
+import IndexController from "./Controller/IndexController.js";
+import menu from "./Model/Menu.js";
+import Args from "./Model/Args.js";
 
 let args = new Args(commandLineArgs(menu[1]["optionList"]));
 

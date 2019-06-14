@@ -1,10 +1,6 @@
 // @flow
-import {
-    createLogger,
-    format as _format,
-    transports as _transports
-} from "winston";
-import Args from "../Model/Args";
+import winston from 'winston';
+import Args from "../Model/Args.js";
 import {join} from "path";
 import {writeFileSync, existsSync, mkdirSync} from "fs";
 
@@ -16,11 +12,11 @@ export default class Logger {
     constructor(args: Args) {
         this.args = args;
         this.logsPath = this.getLogsPath();
-        this.logger = createLogger({
+        this.logger = winston.createLogger({
             level: "info",
-            format: _format.json(),
+            format: winston.format.json(),
             transports: [
-                new _transports.File({filename: join(this.logsPath, "last_run.log")})
+                new winston.transports.File({filename: join(this.logsPath, "last_run.log")})
             ]
         });
     }

@@ -2,12 +2,12 @@
 import UrlParser from "url";
 import axios from 'axios';
 
-import Progress from "../Model/Progress";
-import Url from "../Model/Url";
-import Args from "../Model/Args";
-import Option from "../Model/Option";
+import Progress from "../Model/Progress.js";
+import Url from "../Model/Url.js";
+import Args from "../Model/Args.js";
+import Option from "../Model/Option.js";
 
-import SqliteCrawlStatesRepository from "./SqliteCrawlStatesRepository";
+import SqliteCrawlStatesRepository from "./SqliteCrawlStatesRepository.js";
 import puppeteer from "puppeteer";
 
 /**

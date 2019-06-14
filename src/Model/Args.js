@@ -1,5 +1,5 @@
 // @flow
-import FileDetails from "./FileDetails";
+import FileDetails from "./FileDetails.js";
 import {join} from "path";
 import {existsSync, mkdirSync} from "fs";
 

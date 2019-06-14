@@ -3,7 +3,7 @@ import {existsSync, mkdirSync, copyFileSync} from "fs";
 import {join, dirname} from "path";
 import Database from "better-sqlite3";
 
-import Url from "../Model/Url";
+import Url from "../Model/Url.js";
 
 /**
  * Read and write the current crawl state to file.

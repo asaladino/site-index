@@ -2,10 +2,10 @@
 import {existsSync, mkdirSync} from "fs";
 import {join} from "path";
 
-import OptionsRepository from "../Repository/OptionsRepository";
-import Args from "../Model/Args";
-import Option from "../Model/Option";
-import Progress from "../Model/Progress";
+import OptionsRepository from "../Repository/OptionsRepository.js";
+import Args from "../Model/Args.js";
+import Option from "../Model/Option.js";
+import Progress from "../Model/Progress.js";
 
 /**
  * Base service will events and project folder information.

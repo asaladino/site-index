@@ -1,5 +1,5 @@
 // @flow
-import uuidv5, {URL} from "uuid/v5";
+import uuid from "uuid-with-v6";
 
 /**
  * Url found on the site.
@@ -19,7 +19,7 @@ export default class Url {
     fragment: string;
 
     constructor(url: string) {
-        this.name = uuidv5(url, URL);
+        this.name = uuid.v6();
         this.url = url;
         this.fragment = "";
     }
