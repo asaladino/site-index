@@ -1,6 +1,7 @@
 // @flow
 import UrlParser from "url";
 import axios from 'axios';
+import path, {join} from 'path';
 
 import Progress from "../Model/Progress.js";
 import Url from "../Model/Url.js";
@@ -9,6 +10,7 @@ import Option from "../Model/Option.js";
 
 import SqliteCrawlStatesRepository from "./SqliteCrawlStatesRepository.js";
 import puppeteer from "puppeteer";
+import {existsSync, mkdirSync} from "fs";
 
 /**
  * This crawler repository will use a domain name as a data-source and extract urls from it.
@@ -34,14 +36,16 @@ export default class CrawlerRepository {
     resolve: any;
     browser: any;
     page: any;
+    screenshotsPath: string;
 
     /**
      * Build a sitemap repository
      */
-    constructor(args: Args, option: Option) {
+    constructor(args: Args, option: Option, projectPath: string) {
         this.initialUrl = `http://${args.domain}/`;
         this.args = args;
         this.option = option;
+        this.screenshotsPath = this.getScreenshotPath(projectPath);
     }
 
     /**
@@ -72,6 +76,7 @@ export default class CrawlerRepository {
         if (waitForRender) {
             await this.page.waitFor(waitForRender);
         }
+        // Add check for html doc.
         const response = await axios(url);
         const content = await this.page.mainFrame().content();
         return {
@@ -86,7 +91,8 @@ export default class CrawlerRepository {
      */
     crawlNextUrl() {
         const urlsPoolSize = this.crawlStatesRepository.urlsPoolSize();
-        if (urlsPoolSize === 0) {
+        const urlsSize = this.crawlStatesRepository.urlsSize();
+        if (urlsPoolSize === 0 || (urlsSize >= this.args.limit && this.args.limit !== -1)) {
             this.browser.close();
             return this.resolve(this.crawlStatesRepository.findAllUrls());
         }
@@ -100,6 +106,11 @@ export default class CrawlerRepository {
             this.progress(
                 new Progress(newUrl, data.html, data.headers, urlsSize, urlsPoolSize - 1)
             );
+
+            if ((urlsSize <= this.args.screenshots && this.args.screenshots !== -1) || this.args.screenshots === -1) {
+                this.page.screenshot({path: path.join(this.screenshotsPath, `${newUrl.name}.png`)});
+            }
+
             if (this.args.isSingle()) {
                 this.resolve(this.crawlStatesRepository.findAllUrls());
             } else {
@@ -116,6 +127,19 @@ export default class CrawlerRepository {
         }).catch(() => {
             this.crawlNextUrl();
         });
+    }
+
+    /**
+     * Get the path to the screenshots directory for the project.
+     * @param projectPath as a base
+     * @returns {string} the screenshots path.
+     */
+    getScreenshotPath(projectPath: string) {
+        let screenshotsPath = path.join(projectPath, 'screenshots');
+        if (!existsSync(screenshotsPath)) {
+            mkdirSync(screenshotsPath);
+        }
+        return screenshotsPath;
     }
 
     /**

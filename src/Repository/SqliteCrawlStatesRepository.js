@@ -1,9 +1,12 @@
 // @flow
 import {existsSync, mkdirSync, copyFileSync} from "fs";
 import {join, dirname} from "path";
+import { fileURLToPath } from 'url';
 import Database from "better-sqlite3";
 
 import Url from "../Model/Url.js";
+
+
 
 /**
  * Read and write the current crawl state to file.
@@ -113,10 +116,8 @@ export default class SqliteCrawlStatesRepository {
         this.databaseFile = join(projectsPathUrls, "crawl_state.sqlite");
 
         if (!existsSync(this.databaseFile)) {
-            let tempDbFile = join(
-                dirname(__filename),
-                "../Assets/crawl_state.sqlite"
-            );
+            const __dirname = dirname(fileURLToPath(import.meta.url));
+            let tempDbFile = join(__dirname, '..', '..', "src", "Assets", "crawl_state.sqlite");
             copyFileSync(tempDbFile, this.databaseFile);
         }
     }

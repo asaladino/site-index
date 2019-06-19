@@ -35,6 +35,14 @@ export default class Args {
      * Should progress information be output to the console?
      */
     verbose: ?boolean;
+    /**
+     * Max number of urls to crawl.
+     */
+    limit: number;
+    /**
+     * Max number of screenshots to create.
+     */
+    screenshots: number;
 
     constructor(params: any) {
         this.type = "crawl";
