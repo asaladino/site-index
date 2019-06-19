@@ -1,8 +1,8 @@
 // @flow
 import request from "then-request";
-import {parseString} from "xml2js";
-import Progress from "../Model/Progress";
-import Url from "../Model/Url";
+import * as xml2js from "xml2js";
+import Progress from "../Model/Progress.js";
+import Url from "../Model/Url.js";
 
 /**
  * Get all the urls from the sitemaps.
@@ -60,7 +60,7 @@ export default class SitemapRepository {
         this.progress(new Progress(new Url(url), null, null, this.sitemaps.length, this.urls.length));
         request("GET", url).done(res => {
             let xml = res.getBody("utf8");
-            parseString(xml, (err, result) => {
+            xml2js.parseString(xml, (err, result) => {
                 if (result["urlset"]) {
                     result["urlset"]["url"].forEach(entry => {
                         let url = new Url(entry["loc"][0]);

@@ -2,9 +2,9 @@
 import {existsSync, readFileSync, writeFileSync, mkdirSync} from "fs";
 import {join} from "path";
 
-import Option from "../Model/Option";
+import Option from "../Model/Option.js";
 import OptionDefaults from "../Assets/OptionDefaults.json";
-import Args from "../Model/Args";
+import Args from "../Model/Args.js";
 
 /**
  * Save and load options for the index.

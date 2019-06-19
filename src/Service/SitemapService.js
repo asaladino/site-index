@@ -1,7 +1,7 @@
 // @flow
-import Service from "./Service";
-import SitemapRepository from "../Repository/SitemapRepository";
-import JsonUrlsRepository from "../Repository/JsonUrlsRepository";
+import Service from "./Service.js";
+import SitemapRepository from "../Repository/SitemapRepository.js";
+import JsonUrlsRepository from "../Repository/JsonUrlsRepository.js";
 
 /**
  * This service will extract all the urls from a sitemap or nested sitemaps.

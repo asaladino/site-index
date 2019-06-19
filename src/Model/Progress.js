@@ -1,5 +1,5 @@
 // @flow
-import Url from "./Url";
+import Url from "./Url.js";
 
 type ProgressLog = {
     urlsPoolLength: number,

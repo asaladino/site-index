@@ -1,5 +1,5 @@
 // @flow
-import FileDetails from "./FileDetails";
+import FileDetails from "./FileDetails.js";
 import {join} from "path";
 import {existsSync, mkdirSync} from "fs";
 
@@ -35,6 +35,14 @@ export default class Args {
      * Should progress information be output to the console?
      */
     verbose: ?boolean;
+    /**
+     * Max number of urls to crawl.
+     */
+    limit: number;
+    /**
+     * Max number of screenshots to create.
+     */
+    screenshots: number;
 
     constructor(params: any) {
         this.type = "crawl";

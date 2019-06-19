@@ -1,9 +1,9 @@
 // @flow
-import FileDetails from './FileDetails';
+import FileDetails from './FileDetails.js';
 
 const getFileDetails = (filename: string): FileDetails => {
     return new FileDetails(filename);
-}
+};
 
 /**
  * Available options for the site index.
@@ -46,6 +46,18 @@ export default [
                 defaultValue: false,
                 type: Boolean,
                 description: 'Save the response headers to file.'
+            },
+            {
+                name: 'limit',
+                defaultValue: 500,
+                type: Number,
+                description: 'Max number of urls to scan. Default is 500, a value of -1 scans without limit.'
+            },
+            {
+                name: 'screenshots',
+                defaultValue: 1,
+                type: Number,
+                description: 'Max number of screenshots to take. Default is 1, a value of -1 screenshots every page.'
             },
             {
                 name: 'type',

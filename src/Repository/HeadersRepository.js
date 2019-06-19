@@ -1,6 +1,6 @@
 // @flow
 import {writeFileSync, existsSync, mkdirSync} from "fs";
-import Url from "../Model/Url";
+import Url from "../Model/Url.js";
 import {join} from "path";
 
 /**

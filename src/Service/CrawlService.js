@@ -1,12 +1,12 @@
 // @flow
-import Service from "./Service";
-import Progress from "../Model/Progress";
-import JsonUrlsRepository from "../Repository/JsonUrlsRepository";
-import CrawlerRepository from "../Repository/CrawlerRepository";
-import HtmlRepository from "../Repository/HtmlRepository";
+import Service from "./Service.js";
+import Progress from "../Model/Progress.js";
+import JsonUrlsRepository from "../Repository/JsonUrlsRepository.js";
+import CrawlerRepository from "../Repository/CrawlerRepository.js";
+import HtmlRepository from "../Repository/HtmlRepository.js";
 
-import SqliteCrawlStatesRepository from "../Repository/SqliteCrawlStatesRepository";
-import HeadersRepository from "../Repository/HeadersRepository";
+import SqliteCrawlStatesRepository from "../Repository/SqliteCrawlStatesRepository.js";
+import HeadersRepository from "../Repository/HeadersRepository.js";
 
 /**
  * This service will extract all the urls from a domain by crawling a site.
@@ -19,7 +19,7 @@ export default class CrawlService extends Service {
         let urlsRepository = new JsonUrlsRepository(this.getPathJsonUrlsFile());
         let htmlRepository = new HtmlRepository(this.getProjectPath());
         let headersRepository = new HeadersRepository(this.getProjectPath());
-        let crawlerRepository = new CrawlerRepository(this.args, this.option);
+        let crawlerRepository = new CrawlerRepository(this.args, this.option, this.getProjectPath());
 
         let crawlStatesRepository = new SqliteCrawlStatesRepository(
             this.getProjectPath()

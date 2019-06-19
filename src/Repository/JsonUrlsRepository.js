@@ -1,6 +1,6 @@
 // @flow
 import {writeFileSync} from "fs";
-import Url from "../Model/Url";
+import Url from "../Model/Url.js";
 
 /**
  * Save the urls to a json file.

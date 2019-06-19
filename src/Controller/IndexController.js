@@ -1,9 +1,9 @@
 // @flow
-import CrawlService from '../Service/CrawlService';
-import SitemapService from '../Service/SitemapService';
+import CrawlService from '../Service/CrawlService.js';
+import SitemapService from '../Service/SitemapService.js';
 
-import Logger from '../Utility/Logger';
-import Args from '../Model/Args';
+import Logger from '../Utility/Logger.js';
+import Args from '../Model/Args.js';
 
 export default class IndexController {
     args: Args;
