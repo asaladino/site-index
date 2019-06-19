@@ -1,6 +1,6 @@
 {
   "name": "site-index",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "  Will crawl a site and generate the json file for all the urls found. Also converts a sitemap to a json file.",
   "main": "site-index",
   "repository": "https://github.com/asaladino/site-index",
@@ -18,7 +18,7 @@
   "author": "Adam Saladino<adam@codingsimply.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "better-sqlite3": "^5.4.0",
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
