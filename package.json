@@ -6,7 +6,7 @@
   "repository": "https://github.com/asaladino/site-index",
   "type": "module",
   "scripts": {
-    "start": "node --experimental-modules lib/site-index.js",
+    "start": "node lib/site-index.js",
     "build": "babel --verbose src -d lib -s",
     "watch": "babel --watch --verbose src -d lib -s",
     "babel": "babel --help",

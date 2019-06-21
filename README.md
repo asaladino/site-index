@@ -4,16 +4,16 @@ Site Index will crawl a domain and index any reachable html urls then output to 
 
 ## Index a Site
 
-To start an index, run the `node --experimental-modules ./lib/site-index.js` file
+To start an index, run the `node ./lib/site-index.js` file
 
 ```
-node --experimental-modules ./lib/site-index.js --domain "codingsimply.com" --verbose --headers --html --type crawl --output "/some/reports"
+node ./lib/site-index.js --domain "codingsimply.com" --verbose --headers --html --type crawl --output "/some/reports"
 ```
 
 Domain and output folder are required parameters. To see a list of parameters, run
 
 ```
-node --experimental-modules ./lib/site-index.js --help
+node ./lib/site-index.js --help
 
 Site Index
 
