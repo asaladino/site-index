@@ -116,7 +116,6 @@ export default class SqliteCrawlStatesRepository {
         this.databaseFile = join(projectsPathUrls, "crawl_state.sqlite");
 
         if (!existsSync(this.databaseFile)) {
-            const __dirname = dirname(fileURLToPath(import.meta.url));
             let tempDbFile = join(__dirname, '..', '..', "src", "Assets", "crawl_state.sqlite");
             copyFileSync(tempDbFile, this.databaseFile);
         }
