@@ -1,6 +1,6 @@
 {
   "name": "site-index",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "  Will crawl a site and generate the json file for all the urls found. Also converts a sitemap to a json file.",
   "main": "site-index",
   "repository": "https://github.com/asaladino/site-index",
