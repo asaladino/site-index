@@ -18,42 +18,43 @@ export default class IndexController {
     }): Promise<void> {
         return new Promise((resolve, reject) => {
             this.args.output.doesFolderExist();
-            if (this.args.isCrawl() || this.args.isSingle()) {
-                let crawlService = new CrawlService(this.args);
-                crawlService
-                    .on('progress', progress => {
-                        callback('progress', progress);
-                        this.logger.report(progress.toLog());
-                        if (this.args.verbose) {
-                            console.log(progress.toString());
-                        }
-                    })
-                    .on('complete', () => {
-                        callback('complete');
-                        if (this.args.verbose) {
-                            console.log('Done');
-                        }
-                        resolve();
-                    });
-                crawlService.start();
-            } else {
+
+            let crawlService = new CrawlService(this.args);
+            crawlService
+                .on('progress', progress => {
+                    callback('progress', progress);
+                    this.logger.report(progress.toLog());
+                    if (this.args.verbose) {
+                        console.log(progress.toString());
+                    }
+                })
+                .on('complete', () => {
+                    callback('complete');
+                    if (this.args.verbose) {
+                        console.log('Done');
+                    }
+                    resolve();
+                });
+            if(this.args.isSeedWithSitemap()) {
                 let sitemapService = new SitemapService(this.args);
                 sitemapService
                     .on('progress', progress => {
                         callback('progress', progress);
                         this.logger.report(progress.toLog());
                         if (this.args.verbose) {
-                            console.log(progress.toString());
+                            console.log(`Seeding: ${progress.toString()}`);
                         }
                     })
-                    .on('complete', () => {
+                    .on('complete', (count) => {
                         callback('complete');
                         if (this.args.verbose) {
-                            console.log('Done');
+                            console.log(`Done Seeding. Starting the pool with ${count} urls.`);
                         }
-                        resolve();
+                        crawlService.start();
                     });
                 sitemapService.start();
+            } else {
+                crawlService.start();
             }
         });
     }

@@ -12,9 +12,13 @@ export default class Args {
      */
     output: FileDetails;
     /**
-     * What type of indexing is taking place: crawl or sitemap?
+     * What type of indexing is taking place: crawl or single?
      */
     type: string;
+    /**
+     * Should the crawl start off with seeding from the sitemap?
+     */
+    seedWithSitemap: boolean;
     /**
      * Should the html be saved?
      */
@@ -62,19 +66,18 @@ export default class Args {
     }
 
     /**
-     * Is the indexing going to be a crawl?
-     * @returns {boolean} true if it is.
-     */
-    isCrawl(): boolean {
-        return this.type === "crawl";
-    }
-
-    /**
      * Adds a single page to the index.
      * @return {boolean}
      */
     isSingle(): boolean {
         return this.type === "single";
+    }
+
+    /**
+     * Seed the crawl with the sitemap?
+     */
+    isSeedWithSitemap(): boolean {
+        return this.seedWithSitemap;
     }
 
     /**

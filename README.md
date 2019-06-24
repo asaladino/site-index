@@ -22,16 +22,17 @@ Site Index
 
 Options
 
-  --domain www.domain.com       (Required) Domain to crawl.                                                   
-  --output file                 (Required) Folder to output the information to.                               
-  --uri /path/to/file.html      You might want to add just one more path to index.                            
-  --html                        Save the raw html to file.                                                    
-  --headers                     Save the response headers to file.                                            
-  --limit number                Max number of urls to scan. Default is 500, a value of -1 scans without       
-                                limit.                                                                        
-  --screenshots number          Max number of screenshots to take. Default is 1, a value of -1 screenshots    
-                                every page.                                                                   
-  --type sitemap|crawl|single   Use the sitemap or crawl to index a site for links.                           
-  --verbose                     Output progress information on the index.                                     
-  --help                        Print this usage guide. 
+  --domain www.domain.com    (Required) Domain to crawl.                                                   
+  --output file              (Required) Folder to output the information to.                               
+  --uri /path/to/file.html   You might want to add just one more path to index.                            
+  --html                     Save the raw html to file.                                                    
+  --headers                  Save the response headers to file.                                            
+  --limit number             Max number of urls to scan. Default is 500, a value of -1 scans without       
+                             limit.                                                                        
+  --screenshots number       Max number of screenshots to take. Default is 1, a value of -1 screenshots    
+                             every page.                                                                   
+  --type crawl|single        Do you want to crawl the whole site or just one page?                         
+  --seedWithSitemap          Should the crawl start off with seeding from the sitemap?                     
+  --verbose                  Output progress information on the index.                                     
+  --help                     Print this usage guide.
 ```

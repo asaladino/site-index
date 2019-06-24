@@ -63,8 +63,14 @@ export default [
                 name: 'type',
                 defaultValue: 'crawl',
                 type: String,
-                typeLabel: '[underline]{sitemap|crawl|single}',
-                description: 'Use the sitemap or crawl to index a site for links.'
+                typeLabel: '[underline]{crawl|single}',
+                description: 'Do you want to crawl the whole site or just one page?'
+            },
+            {
+                name: 'seedWithSitemap',
+                defaultValue: false,
+                type: Boolean,
+                description: 'Should the crawl start off with seeding from the sitemap?'
             },
             {
                 name: 'verbose',

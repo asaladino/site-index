@@ -20,11 +20,17 @@ export default class SitemapRepository {
      * Array of all the urls found.
      */
     urls: Url[];
-
+    /**
+     * Where the scan at?
+     */
     progress: Progress => void;
-
+    /**
+     * Called with a list of urls that were found on the sitemap.
+     */
     resolve: (Url[]) => void;
-
+    /**
+     * Report a problem.
+     */
     reject: () => void;
 
     /**

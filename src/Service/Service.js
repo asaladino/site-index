@@ -60,10 +60,10 @@ export default class Service {
     /**
      * Emit that the service has completed it's job.
      */
-    emitComplete() {
+    emitComplete(count) {
         this.events.forEach((callback, event) => {
             if (event === "complete") {
-                callback();
+                callback(count);
             }
         });
     }

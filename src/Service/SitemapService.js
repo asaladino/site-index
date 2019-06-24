@@ -1,7 +1,7 @@
 // @flow
 import Service from "./Service.js";
 import SitemapRepository from "../Repository/SitemapRepository.js";
-import JsonUrlsRepository from "../Repository/JsonUrlsRepository.js";
+import SqliteCrawlStatesRepository from "../Repository/SqliteCrawlStatesRepository";
 
 /**
  * This service will extract all the urls from a sitemap or nested sitemaps.
@@ -12,14 +12,13 @@ export default class SitemapService extends Service {
      * Assumes the sitemap is located at the domain + /sitemap.xml
      */
     start() {
-        let urlsRepository = new JsonUrlsRepository(this.getPathJsonUrlsFile());
-        let sitemapRepository = new SitemapRepository(
-            "http://" + this.args.domain + "/sitemap.xml"
-        );
+        let sitemapRepository = new SitemapRepository("http://" + this.args.domain + "/sitemap.xml");
+        let crawlStatesRepository = new SqliteCrawlStatesRepository(this.getProjectPath());
         sitemapRepository
             .findAllPages(progress => this.emitProgress(progress))
             .then(urls => {
-                urlsRepository.save(urls).then(() => this.emitComplete());
+                urls.forEach(url => crawlStatesRepository.addPoolUrl(url.url));
+                this.emitComplete(urls.length);
             });
     }
 }

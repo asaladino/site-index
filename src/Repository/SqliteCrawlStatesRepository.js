@@ -1,12 +1,8 @@
 // @flow
 import {existsSync, mkdirSync, copyFileSync} from "fs";
-import {join, dirname} from "path";
-import { fileURLToPath } from 'url';
+import {join} from "path";
 import Database from "better-sqlite3";
-
 import Url from "../Model/Url.js";
-
-
 
 /**
  * Read and write the current crawl state to file.
@@ -26,12 +22,8 @@ export default class SqliteCrawlStatesRepository {
         this.db = new Database(this.databaseFile, {});
 
         this.insertUrlsStmt = this.db.prepare("INSERT INTO urls VALUES (?, ?)");
-        this.insertUrlsAttemptedStmt = this.db.prepare(
-            "INSERT INTO urls_attempted VALUES (?)"
-        );
-        this.insertUrlsPoolStmt = this.db.prepare(
-            "INSERT INTO urls_pool VALUES (?)"
-        );
+        this.insertUrlsAttemptedStmt = this.db.prepare("INSERT INTO urls_attempted VALUES (?)");
+        this.insertUrlsPoolStmt = this.db.prepare("INSERT INTO urls_pool VALUES (?)");
     }
 
     /**

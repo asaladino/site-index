@@ -1,7 +1,7 @@
 // @flow
 import UrlParser from "url";
 import axios from 'axios';
-import path, {join} from 'path';
+import path from 'path';
 
 import Progress from "../Model/Progress.js";
 import Url from "../Model/Url.js";
@@ -45,7 +45,7 @@ export default class CrawlerRepository {
         this.initialUrl = `http://${args.domain}/`;
         this.args = args;
         this.option = option;
-        this.screenshotsPath = this.getScreenshotPath(projectPath);
+        this.screenshotsPath = CrawlerRepository.getScreenshotsPath(projectPath);
     }
 
     /**
@@ -78,11 +78,15 @@ export default class CrawlerRepository {
         }
         // Add check for html doc.
         const response = await axios(url);
-        const content = await this.page.mainFrame().content();
-        return {
-            headers: response.headers,
-            html: content
+        const contentType = response.headers['content-type'];
+        if(contentType && contentType.indexOf("text/html") > -1) {
+            const content = await this.page.mainFrame().content();
+            return {
+                headers: response.headers,
+                html: content
+            }
         }
+        return null;
     }
 
     /**
@@ -101,27 +105,31 @@ export default class CrawlerRepository {
         );
         this.processPage(url).then(async data => {
             const newUrl = new Url(url);
-            this.crawlStatesRepository.addUrl(newUrl);
-            const urlsSize = this.crawlStatesRepository.urlsSize();
-            this.progress(
-                new Progress(newUrl, data.html, data.headers, urlsSize, urlsPoolSize - 1)
-            );
+            if(newUrl) {
+                this.crawlStatesRepository.addUrl(newUrl);
+                const urlsSize = this.crawlStatesRepository.urlsSize();
+                this.progress(
+                    new Progress(newUrl, data.html, data.headers, urlsSize, urlsPoolSize - 1)
+                );
 
-            if ((urlsSize <= this.args.screenshots && this.args.screenshots !== -1) || this.args.screenshots === -1) {
-                this.page.screenshot({path: path.join(this.screenshotsPath, `${newUrl.name}.png`)});
-            }
-
-            if (this.args.isSingle()) {
-                this.resolve(this.crawlStatesRepository.findAllUrls());
-            } else {
-                const links = await this.page.$$("a");
-                for (let linkHandle of links) {
-                    const href = await this.page.evaluate(link => link.href, linkHandle);
-                    let foundUrl = CrawlerRepository.cleanUrl(href);
-                    if (this.isFreshUrl(foundUrl)) {
-                        this.crawlStatesRepository.addPoolUrl(foundUrl);
-                    }
+                if ((urlsSize <= this.args.screenshots && this.args.screenshots !== -1) || this.args.screenshots === -1) {
+                    this.page.screenshot({path: path.join(this.screenshotsPath, `${newUrl.name}.png`)});
                 }
+
+                if (this.args.isSingle()) {
+                    this.resolve(this.crawlStatesRepository.findAllUrls());
+                } else {
+                    const links = await this.page.$$("a");
+                    for (let linkHandle of links) {
+                        const href = await this.page.evaluate(link => link.href, linkHandle);
+                        let foundUrl = CrawlerRepository.cleanUrl(href);
+                        if (this.isFreshUrl(foundUrl)) {
+                            this.crawlStatesRepository.addPoolUrl(foundUrl);
+                        }
+                    }
+                    this.crawlNextUrl();
+                }
+            } else {
                 this.crawlNextUrl();
             }
         }).catch(() => {
@@ -134,7 +142,7 @@ export default class CrawlerRepository {
      * @param projectPath as a base
      * @returns {string} the screenshots path.
      */
-    getScreenshotPath(projectPath: string) {
+    static getScreenshotsPath(projectPath: string) {
         let screenshotsPath = path.join(projectPath, 'screenshots');
         if (!existsSync(screenshotsPath)) {
             mkdirSync(screenshotsPath);
