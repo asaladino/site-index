@@ -42,7 +42,8 @@ export default class CrawlerRepository {
      * Build a sitemap repository
      */
     constructor(args: Args, option: Option, projectPath: string) {
-        this.initialUrl = `http://${args.domain}/`;
+        const {initialUrl} = option.index;
+        this.initialUrl =  initialUrl ? initialUrl : `http://${args.domain}/`;
         this.args = args;
         this.option = option;
         this.screenshotsPath = CrawlerRepository.getScreenshotsPath(projectPath);
@@ -79,7 +80,7 @@ export default class CrawlerRepository {
         // Add check for html doc.
         const response = await axios(url);
         const contentType = response.headers['content-type'];
-        if(contentType && contentType.indexOf("text/html") > -1) {
+        if (contentType && contentType.indexOf("text/html") > -1) {
             const content = await this.page.mainFrame().content();
             return {
                 headers: response.headers,
@@ -105,7 +106,7 @@ export default class CrawlerRepository {
         );
         this.processPage(url).then(async data => {
             const newUrl = new Url(url);
-            if(newUrl) {
+            if (newUrl) {
                 this.crawlStatesRepository.addUrl(newUrl);
                 const urlsSize = this.crawlStatesRepository.urlsSize();
                 this.progress(
@@ -160,6 +161,7 @@ export default class CrawlerRepository {
             urls === 0 &&
             this.isInDomain(url) &&
             this.isNotExclusion(url) &&
+            this.isInclusion(url) &&
             CrawlerRepository.isNotRecursive(url) &&
             CrawlerRepository.isNotDocument(url)
         );
@@ -176,6 +178,24 @@ export default class CrawlerRepository {
             }
         }
         return true;
+    }
+
+    /**
+     * Check to see if the url should be included. If there are no inclusions,
+     * then everything is included.
+     */
+    isInclusion(url: string): boolean {
+        const {inclusions} = this.option.index;
+        if (!inclusions) {
+            return true;
+        }
+        let {path} = UrlParser.parse(url);
+        for (let inclusion of inclusions) {
+            if (path.startsWith(inclusion)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

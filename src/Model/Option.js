@@ -2,7 +2,9 @@
 
 type Index = {
     exclusions: string[],
-    waitForRender: number
+    inclusions: string[],
+    waitForRender: number,
+    initialUrl: string
 };
 
 /**
@@ -17,7 +19,9 @@ export default class Option {
     constructor(option: any) {
         this.index = {
             exclusions: [],
-            waitForRender: 1000
+            inclusions: [],
+            waitForRender: 1000,
+            initialUrl: null
         };
         Object.assign(this, option);
     }
