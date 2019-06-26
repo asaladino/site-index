@@ -43,7 +43,7 @@ export default class CrawlerRepository {
      */
     constructor(args: Args, option: Option, projectPath: string) {
         const {initialUrl} = option.index;
-        this.initialUrl =  initialUrl ? initialUrl : `http://${args.domain}/`;
+        this.initialUrl = initialUrl ? initialUrl : `http://${args.domain}/`;
         this.args = args;
         this.option = option;
         this.screenshotsPath = CrawlerRepository.getScreenshotsPath(projectPath);
@@ -60,10 +60,29 @@ export default class CrawlerRepository {
         this.browser = await puppeteer.launch({ignoreHTTPSErrors: true, headless: true});
         this.page = await this.browser.newPage();
         this.page.setJavaScriptEnabled(true);
+        if (this.option.credentials) {
+            await this.login();
+        }
         return new Promise<Url[]>(resolve => {
             this.resolve = resolve;
             this.crawlNextUrl();
         });
+    }
+
+    /**
+     * Log a user in if needed.
+     * @returns {Promise<void>}
+     */
+    async login() {
+        const {loginUrl, usernameSelector, passwordSelector, username, password, buttonSelector} = this.option.credentials;
+        await this.page.goto(loginUrl);
+        await this.page.waitFor(5000);
+        await this.page.$eval(usernameSelector, (node, args) => node.value = args.username, {username: username});
+        await this.page.$eval(passwordSelector, (node, args) => node.value = args.password, {password: password});
+
+        const submitElement = await this.page.$(buttonSelector);
+        await submitElement.click();
+        await this.page.waitFor(5000);
     }
 
     /**
@@ -77,13 +96,18 @@ export default class CrawlerRepository {
         if (waitForRender) {
             await this.page.waitFor(waitForRender);
         }
-        // Add check for html doc.
-        const response = await axios(url);
-        const contentType = response.headers['content-type'];
-        if (contentType && contentType.indexOf("text/html") > -1) {
-            const content = await this.page.mainFrame().content();
+        let response;
+        let contentType;
+        try {
+            response = await axios.get(url);
+            contentType = response.headers['content-type'];
+        } catch (e) {
+        }
+        if (!contentType || (contentType && contentType.indexOf("text/html") > -1)) {
+            const frame = await this.page.mainFrame();
+            const content = await frame.content();
             return {
-                headers: response.headers,
+                headers: response ? response.headers : [],
                 html: content
             }
         }

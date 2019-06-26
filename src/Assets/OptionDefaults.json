@@ -1,6 +1,9 @@
 {
+  "credentials": null,
   "index": {
     "exclusions": [],
-    "waitForRender": 1000
+    "inclusions": [],
+    "initialUrl": null,
+    "waitForRender": null
   }
 }
