@@ -232,6 +232,8 @@ export default class CrawlerRepository {
             !url.endsWith(".jpg") &&
             !url.endsWith(".png") &&
             !url.endsWith(".gif") &&
+            !url.endsWith(".xml") && // content-type might be html but we get xml.
+            !url.endsWith(".docx") &&
             !url.endsWith(".doc")
         );
     }
