@@ -24,6 +24,7 @@
     "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
     "node-gtk": "^0.3.0",
+    "prop-types": "^15.7.2",
     "puppeteer": "^1.15.0",
     "then-request": "^4.1.0",
     "uuid-with-v6": "^1.1.2",
