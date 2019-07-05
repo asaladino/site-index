@@ -1,6 +1,7 @@
 // noinspection ES6CheckImport
 import PropTypes from 'prop-types';
 import gi from 'node-gtk';
+
 const Gtk = gi.require('Gtk', '3.0');
 const {Window, Label, Entry, Grid, Switch, ProgressBar, Button} = Gtk;
 
@@ -27,15 +28,14 @@ const startGui = (args) => {
     grid.attach(new Label({label: `Headers`}), 0, 2, 1, 1);
     grid.attach(new Switch({active: args.headers}), 1, 2, 1, 1);
 
-    const progressBar = new ProgressBar({
-        fraction: 0.4,
-        'show-text': true,
-        text: 'Making progress.'
-    });
+    const progressBar = new ProgressBar({fraction: 0.4, 'show-text': true, text: 'Making progress.'});
     grid.attach(progressBar, 0, 3, 2, 1);
 
-
-    grid.attach(new Button({label: 'Start Index'}), 1, 4, 1, 1);
+    const startButton = new Button({label: 'Start Index'});
+    grid.attach(startButton, 1, 4, 1, 1);
+    startButton.on('clicked', () => {
+        console.log(`Let's scan..`);
+    });
 
     window.add(grid);
 
@@ -46,6 +46,9 @@ const startGui = (args) => {
 Gtk.propTypes = {
     WindowPosition: {
         CENTER: PropTypes.object
+    },
+    Grid: {
+        attach: PropTypes.func
     }
 };
 Window.propTypes = {
