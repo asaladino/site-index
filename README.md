@@ -7,8 +7,17 @@ Site Index will crawl a domain and index any reachable html urls then output to 
 To start an index, run the `node ./lib/site-index.js` file
 
 ```
-node ./lib/site-index.js --domain "codingsimply.com" --verbose --headers --html --type crawl --output "/some/reports"
+node ./lib/site-index.js --domain "codingsimply.com" --verbose --headers --html --output "/some/reports"
 ```
+
+You can also start the GUI (experimental). It requires GTK+ and has only been tested on Ubuntu.
+
+```
+node ./lib/site-index.js --domain "codingsimply.com" --gui --headers --html --output "/some/reports"
+```
+
+![Experimental GUI](./docs/screenshot.png "Experimental GUI")
+
 
 Domain and output folder are required parameters. To see a list of parameters, run
 
@@ -26,6 +35,7 @@ Options
   --output file              (Required) Folder to output the information to.                               
   --uri /path/to/file.html   You might want to add just one more path to index.                            
   --html                     Save the raw html to file.                                                    
+  --gui                      Show the gui.                                                                 
   --headers                  Save the response headers to file.                                            
   --limit number             Max number of urls to scan. Default is 500, a value of -1 scans without       
                              limit.                                                                        

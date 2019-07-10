@@ -42,6 +42,12 @@ export default [
                 description: 'Save the raw html to file.'
             },
             {
+                name: 'gui',
+                defaultValue: false,
+                type: Boolean,
+                description: 'Show the gui.'
+            },
+            {
                 name: 'headers',
                 defaultValue: false,
                 type: Boolean,

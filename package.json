@@ -1,6 +1,6 @@
 {
   "name": "site-index",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "  Will crawl a site and generate the json file for all the urls found. Also converts a sitemap to a json file.",
   "main": "site-index",
   "repository": "https://github.com/asaladino/site-index",
@@ -23,6 +23,8 @@
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
+    "node-gtk": "^0.3.0",
+    "prop-types": "^15.7.2",
     "puppeteer": "^1.15.0",
     "then-request": "^4.1.0",
     "uuid-with-v6": "^1.1.2",

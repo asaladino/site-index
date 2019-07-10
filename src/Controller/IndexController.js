@@ -14,8 +14,7 @@ export default class IndexController {
         this.logger = new Logger(args);
     }
 
-    start(callback: function = (event, progress) => {
-    }): Promise<void> {
+    start(callback): Promise<void> {
         return new Promise((resolve, reject) => {
             this.args.output.doesFolderExist();
 

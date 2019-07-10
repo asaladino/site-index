@@ -40,6 +40,10 @@ export default class Args {
      */
     verbose: ?boolean;
     /**
+     * Should the gui be displayed?
+     */
+    gui: ?boolean;
+    /**
      * Max number of urls to crawl.
      */
     limit: number;
