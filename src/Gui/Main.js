@@ -2,11 +2,13 @@
 import PropTypes from 'prop-types';
 import gi from 'node-gtk';
 import IndexController from "../Controller/IndexController";
+import Args from "../Model/Args";
+import FileDetails from "../Model/FileDetails";
 
 const Gtk = gi.require('Gtk', '3.0');
-const {Window, Label, Entry, Grid, Switch, ProgressBar, Button, Box, Align} = Gtk;
+const {Window, Label, Entry, Grid, Switch, ProgressBar, Button, Box, FileChooserButton} = Gtk;
 
-const startGui = (args) => {
+const startGui = (args: Args) => {
     gi.startLoop();
     Gtk.init();
 
@@ -32,8 +34,10 @@ const startGui = (args) => {
     grid.attach(domainEntry, 1, 0, 1, 1);
 
     grid.attach(new Label({label: `Output`, halign: 1}), 0, 1, 1, 1);
-    const outputEntry = new Entry({text: args.output.filename});
-    grid.attach(outputEntry, 1, 1, 1, 1);
+    const fileChooserButton = new FileChooserButton();
+    fileChooserButton.setAction(2);
+    fileChooserButton.setCurrentFolder(args.output.filename);
+    grid.attach(fileChooserButton, 1, 1, 1, 1);
 
     grid.attach(new Label({label: `Headers`, halign: 1}), 0, 2, 1, 1);
     const headersSwitch = new Switch({active: args.headers});
@@ -49,8 +53,11 @@ const startGui = (args) => {
     startButtonBox.add(startButton);
     grid.attach(startButtonBox, 1, 4, 1, 1);
 
-
     startButton.on('clicked', () => {
+        args.domain = domainEntry.getText();
+        args.output = new FileDetails(fileChooserButton.getCurrentFolder());
+        args.headers = headersSwitch.getState();
+
         let indexController = new IndexController(args);
         startButton.setSensitive(false);
         startButton.setLabel("Indexing Site...");
@@ -80,6 +87,14 @@ Gtk.propTypes = {
     },
     Grid: {
         attach: PropTypes.func
+    },
+    FileChooserButton: {
+        getCurrentFolder: PropTypes.func,
+        setCurrentFolder: PropTypes.func,
+        setAction: PropTypes.func
+    },
+    Entry: {
+        getText: PropTypes.func
     },
     ProgressBar: {
         setFraction: PropTypes.func
