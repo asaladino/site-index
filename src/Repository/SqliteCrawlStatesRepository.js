@@ -21,7 +21,7 @@ export default class SqliteCrawlStatesRepository {
         this.createIndexFolder();
         this.db = new Database(this.databaseFile, {});
 
-        this.insertUrlsStmt = this.db.prepare("INSERT INTO urls VALUES (?, ?)");
+        this.insertUrlsStmt = this.db.prepare("INSERT INTO urls VALUES (?, ?, ?, ?)");
         this.insertUrlsAttemptedStmt = this.db.prepare("INSERT INTO urls_attempted VALUES (?)");
         this.insertUrlsPoolStmt = this.db.prepare("INSERT INTO urls_pool VALUES (?)");
     }
@@ -66,7 +66,7 @@ export default class SqliteCrawlStatesRepository {
      * Add a found url.
      */
     addUrl(url: Url) {
-        this.insertUrlsStmt.run([url.url, url.name]);
+        this.insertUrlsStmt.run([url.url, url.name, '', '']);
     }
 
     /**

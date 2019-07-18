@@ -5,10 +5,13 @@ import IndexController from "../Controller/IndexController";
 import Args from "../Model/Args";
 import FileDetails from "../Model/FileDetails";
 
-const Gtk = gi.require('Gtk', '3.0');
-const {Window, Label, Entry, Grid, Switch, ProgressBar, Button, Box, FileChooserButton} = Gtk;
+let Gtk = {};
+let Window = {};
 
 const startGui = (args: Args) => {
+    Gtk = gi.require('Gtk', '3.0');
+    const {Window, Label, Entry, Grid, Switch, ProgressBar, Button, Box, FileChooserButton} = Gtk;
+
     gi.startLoop();
     Gtk.init();
 
@@ -104,6 +107,7 @@ Gtk.propTypes = {
         setLabel: PropTypes.func
     }
 };
+
 Window.propTypes = {
     setWmclass: PropTypes.func,
     setDefaultSize: PropTypes.func,

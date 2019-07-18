@@ -14,7 +14,7 @@ export default class IndexController {
         this.logger = new Logger(args);
     }
 
-    start(callback): Promise<void> {
+    start(callback = function () {}): Promise<void> {
         return new Promise((resolve, reject) => {
             this.args.output.doesFolderExist();
 
@@ -34,7 +34,7 @@ export default class IndexController {
                     }
                     resolve();
                 });
-            if(this.args.isSeedWithSitemap()) {
+            if (this.args.isSeedWithSitemap()) {
                 let sitemapService = new SitemapService(this.args);
                 sitemapService
                     .on('progress', progress => {
