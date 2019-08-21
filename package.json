@@ -23,6 +23,7 @@
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
     "fs": "0.0.1-security",
+    "json2csv": "^4.5.2",
     "node-gtk": "^0.3.0",
     "prop-types": "^15.7.2",
     "puppeteer": "^1.15.0",

@@ -97,4 +97,11 @@ export default class Service {
     getPathJsonUrlsFile(): string {
         return join(this.getUrlsPath(), "urls.json");
     }
+
+    /**
+     * Get the path to the urls.csv file.
+     */
+    getPathCsvUrlsFile(): string {
+        return join(this.getUrlsPath(), "urls.csv");
+    }
 }
