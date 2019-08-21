@@ -267,6 +267,6 @@ export default class CrawlerRepository {
      * Remove url params and hashes. They can lead to recursion.
      */
     static cleanUrl(url: string): string {
-        return url.split("?")[0].split("#")[0];
+        return url.split("#")[0];
     }
 }

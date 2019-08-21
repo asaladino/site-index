@@ -7,6 +7,7 @@ import HtmlRepository from "../Repository/HtmlRepository.js";
 
 import SqliteCrawlStatesRepository from "../Repository/SqliteCrawlStatesRepository.js";
 import HeadersRepository from "../Repository/HeadersRepository.js";
+import CsvUrlsRepository from "../Repository/CsvUrlsRepository";
 
 /**
  * This service will extract all the urls from a domain by crawling a site.
@@ -17,6 +18,7 @@ export default class CrawlService extends Service {
      */
     start() {
         let urlsRepository = new JsonUrlsRepository(this.getPathJsonUrlsFile());
+        let csvUrlsRepository = new CsvUrlsRepository(this.getPathCsvUrlsFile());
         let htmlRepository = new HtmlRepository(this.getProjectPath());
         let headersRepository = new HeadersRepository(this.getProjectPath());
         let crawlerRepository = new CrawlerRepository(this.args, this.option, this.getProjectPath());
@@ -39,6 +41,7 @@ export default class CrawlService extends Service {
             })
             .then(urls => {
                 urlsRepository.save(urls).then(() => this.emitComplete());
+                csvUrlsRepository.save(urls).then(() => this.emitComplete());
             });
     }
 }
